@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="handler"
+            type="com.sup2is.accountbook.handler.ActionbarHandler" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/actionbar_layout_height"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/actionbar_ll_calendar_bar_layout_height"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/ib_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="@dimen/actionbar_ib_left_arrow_margin_right"
+                android:layout_toLeftOf="@id/tv_calendar"
+                android:background="@android:color/transparent"
+                android:onClick="@{handler::onClickLeftButton}"
+                android:src="@drawable/arrow_left" />
+
+            <TextView
+                android:id="@+id/tv_calendar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text=""
+                android:textSize="@dimen/actionbar_tv_calendar_text_size" />
+
+            <ImageButton
+                android:id="@+id/ib_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/actionbar_ib_right_arrow_margin_left"
+                android:layout_toRightOf="@id/tv_calendar"
+                android:background="@android:color/transparent"
+                android:onClick="@{handler::onClickRightButton}"
+                android:src="@drawable/arrow_right" />
+        </RelativeLayout>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tl_gnb"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/actionbar_gnb_layout_height"
+            app:tabIndicatorColor="#fff">
+        </android.support.design.widget.TabLayout>
+
+    </LinearLayout>
+</layout>

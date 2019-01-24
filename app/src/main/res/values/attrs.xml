@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <declare-styleable name="Custom_Navigation_Bar">
+        <attr name="src" format="reference|integer" />
+        <attr name="text" format="reference|string" />
+    </declare-styleable>
+    
+</resources>

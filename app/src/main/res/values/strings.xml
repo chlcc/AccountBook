@@ -1,0 +1,14 @@
+<resources>
+
+    <string name="app_name">AccountBook</string>
+
+
+
+    <!--button name-->
+    <string name="button_calendar">월간</string>
+    <string name="button_settings">설정</string>
+    <string name="button_statistics">통계</string>
+    <string name="button_daily_list">일간</string>
+
+
+</resources>
