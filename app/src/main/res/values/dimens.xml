@@ -7,7 +7,7 @@
 
 
     <!--action bar-->
-    <dimen name="actionbar_layout_height">100dp</dimen>
+    <dimen name="actionbar_layout_height">130dp</dimen>
     <dimen name="actionbar_tv_calendar_text_size">20dp</dimen>
     <dimen name="actionbar_ib_left_arrow_margin_right">10dp</dimen>
     <dimen name="actionbar_ib_right_arrow_margin_left">10dp</dimen>
@@ -19,10 +19,8 @@
     <!--Activity-->
     <!--activity name + component id + style name-->
 
-
     <!--SplashActivity.java-->
     <dimen name="splash_tv_app_version_margin_bottom">16dp</dimen>
     <dimen name="listview_layout_height">70dp</dimen>
-
 
 </resources>

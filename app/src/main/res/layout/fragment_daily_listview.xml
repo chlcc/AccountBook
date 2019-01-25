@@ -1,22 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#eee">
-
-    <TextView
+<layout>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="이건 listview야" />
+        android:background="@color/whiteSmoke">
 
+        <ListView
+            android:id="@+id/lv_daily_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@drawable/drop_shadow"
+            android:dividerHeight="5.5dp"/>
 
-<!--
-
-    <android.support.design.widget.Floa tingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
--->
-
-
-</FrameLayout>
+    </FrameLayout>
+</layout>
