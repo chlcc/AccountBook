@@ -91,5 +91,8 @@ public class DailyListViewFragment extends BaseFragment implements View.OnClickL
         InputFormDialogFragment inputFormDialogFragment = new InputFormDialogFragment();
         inputFormDialogFragment.show(fm,"input");
 
+//        new InputDialog(getActivity());
+
+
     }
 }

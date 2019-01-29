@@ -32,6 +32,7 @@
                 android:id="@+id/tv_calendar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="@{handler::onClickCalendarPicker}"
                 android:layout_centerInParent="true"
                 android:text=""
                 android:textSize="@dimen/actionbar_tv_calendar_text_size" />

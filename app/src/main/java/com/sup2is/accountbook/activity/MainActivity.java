@@ -38,9 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
     private TabPagerAdapter tabPagerAdapter;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         parent.setPadding(0,0,0,0);
         parent.setContentInsetsAbsolute(0,0);
 
-        actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorAccent)));
+        actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.actionBar)));
 
         // gnb
         TabLayout tabLayout =  actionbarBinding.tlGnb;
@@ -128,8 +125,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     public void refresh() {
         tabPagerAdapter.notifyDataSetChanged();
+    }
+
+    public void setCalendarText(String date) {
+        actionbarBinding.tvCalendar.setText(date);
     }
 }

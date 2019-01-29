@@ -1,14 +1,31 @@
 <resources>
 
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
-    </style><!-- Application theme. -->
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar"></style><!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
 
     <style name="CustomActionBar" parent="Theme.AppCompat">
         <item name="android:actionBarSize">@dimen/actionbar_layout_height</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
+
+    <style name="CustomDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:background">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
+
+    <style name="DatePicker" parent="Theme.MaterialComponents.Dialog">
+        <item name="android:textColorPrimary">#000</item>
+    </style>
+
 
 </resources>
