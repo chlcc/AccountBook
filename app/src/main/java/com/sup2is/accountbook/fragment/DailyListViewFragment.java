@@ -4,6 +4,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,7 @@ import com.sup2is.accountbook.util.GlobalDate;
 
 import java.util.ArrayList;
 
-public class DailyListViewFragment extends BaseFragment {
+public class DailyListViewFragment extends BaseFragment implements View.OnClickListener {
 
     private static final String TAG = DailyListViewFragment.class.getSimpleName();
 
@@ -54,6 +55,10 @@ public class DailyListViewFragment extends BaseFragment {
 
         DailyListViewAdapter dailyListViewAdapter = new DailyListViewAdapter(getContext(),dailyListItems);
         dailyListviewBinding.lvDailyList.setAdapter(dailyListViewAdapter);
+
+
+        dailyListviewBinding.fabInput.setOnClickListener(this);
+
         return view;
 
     }
@@ -75,6 +80,16 @@ public class DailyListViewFragment extends BaseFragment {
 
         globalDate = GlobalDate.getInstance();
         globalDate.getDate();
+
+    }
+
+    @Override
+    public void onClick(View v) {
+
+
+        FragmentManager fm = getFragmentManager();
+        InputFormDialogFragment inputFormDialogFragment = new InputFormDialogFragment();
+        inputFormDialogFragment.show(fm,"input");
 
     }
 }

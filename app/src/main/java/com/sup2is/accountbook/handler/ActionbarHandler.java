@@ -13,18 +13,16 @@ public class ActionbarHandler {
 
     private RelativeLayout parent;
 
-    private TextView tv_calendar;
-
     public void onClickLeftButton (View view) {
         globalDate = GlobalDate.getInstance();
-        globalDate.previousDate();
+        globalDate.previousMonth();
         parent = (RelativeLayout) view.getParent();
         ((TextView) parent.findViewById(R.id.tv_calendar)).setText(globalDate.getDate());
     }
 
     public void onClickRightButton (View view) {
         globalDate = GlobalDate.getInstance();
-        globalDate.nextDate();
+        globalDate.nextMonth();
         parent = (RelativeLayout) view.getParent();
         ((TextView) parent.findViewById(R.id.tv_calendar)).setText(globalDate.getDate());
     }

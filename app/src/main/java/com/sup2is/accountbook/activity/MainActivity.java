@@ -4,31 +4,23 @@ import android.databinding.DataBindingUtil;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.sup2is.accountbook.R;
-import com.sup2is.accountbook.adapter.DailyListViewAdapter;
 import com.sup2is.accountbook.adapter.TabPagerAdapter;
 import com.sup2is.accountbook.application.AccountBookApplication;
 import com.sup2is.accountbook.databinding.ActivityMainBinding;
 import com.sup2is.accountbook.databinding.FragmentDailyListviewBinding;
 import com.sup2is.accountbook.databinding.LayoutActionbarBinding;
-import com.sup2is.accountbook.fragment.DailyListViewFragment;
 import com.sup2is.accountbook.handler.ActionbarHandler;
-import com.sup2is.accountbook.model.DailyListItem;
 import com.sup2is.accountbook.util.GlobalDate;
 import com.sup2is.accountbook.util.SharedPreferenceManager;
-
-import java.util.ArrayList;
-import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -112,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 binding.vpContainer.setCurrentItem(tab.getPosition());
-                //tabPagerAdapter.refreshFragment(tab.getPosition());
+                tabPagerAdapter.refreshFragment(tab.getPosition());
             }
 
             @Override

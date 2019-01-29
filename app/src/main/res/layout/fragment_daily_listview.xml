@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/whiteSmoke">
+        android:background="#fff">
 
         <ListView
             android:id="@+id/lv_daily_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@drawable/drop_shadow"
-            android:dividerHeight="5.5dp"/>
+            android:dividerHeight="3dp"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/plus"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="15dp"
+            android:layout_marginRight="15dp"
+            app:elevation="10dp"
+            app:pressedTranslationZ="12dp"
+            />
 
     </FrameLayout>
 </layout>

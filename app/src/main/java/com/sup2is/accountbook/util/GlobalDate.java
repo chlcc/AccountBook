@@ -9,7 +9,7 @@ public class GlobalDate {
 
     private static final String TAG = GlobalDate.class.getSimpleName();
 
-    private Calendar calendar;
+    private final Calendar calendar;
 
     private static GlobalDate instance;
 
@@ -25,20 +25,43 @@ public class GlobalDate {
         calendar.setTime(new Date());
     }
 
+    public int getActualMaximum() {
+        return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+    }
+
     public String getDate() {
         Log.d(TAG , calendar.get(Calendar.YEAR) + "." + (calendar.get(Calendar.MONTH)+1));
         return calendar.get(Calendar.YEAR) + "." + (calendar.get(Calendar.MONTH)+1);
     }
 
-    public String previousDate() {
+    public int getYear(){
+        return calendar.get(Calendar.YEAR);
+    }
+
+    public int getMonth(){
+        return calendar.get(Calendar.MONTH);
+    }
+
+    public int getDay(){
+        return calendar.get(Calendar.DATE);
+    }
+
+    public int getDayNum() {
+        return calendar.get(Calendar.DAY_OF_WEEK);
+    }
+
+    public String previousMonth() {
         calendar.add(calendar.MONTH, -1);
         return getDate();
     }
 
-    public String nextDate() {
+    public String nextMonth() {
         calendar.add(calendar.MONTH, +1);
         return getDate();
     }
 
+    public int getToday() {
+        return calendar.get(Calendar.DAY_OF_MONTH);
+    }
 
 }

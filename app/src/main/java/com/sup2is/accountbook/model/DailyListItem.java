@@ -24,55 +24,28 @@ public class DailyListItem {
         return day;
     }
 
-    public void setDay(String day) {
-        this.day = day;
-    }
-
     public String getTime() {
         return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
     }
 
     public String getWeek() {
         return week;
     }
 
-    public void setWeek(String week) {
-        this.week = week;
-    }
-
     public String getMoney() {
         return money;
-    }
-
-    public void setMoney(String money) {
-        this.money = money;
     }
 
     public String getContent() {
         return content;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     public String getGroup() {
         return group;
-    }
-
-    public void setGroup(String group) {
-        this.group = group;
     }
 
     public String getMethod() {
         return method;
     }
 
-    public void setMethod(String method) {
-        this.method = method;
-    }
 }
