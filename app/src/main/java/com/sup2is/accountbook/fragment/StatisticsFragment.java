@@ -4,7 +4,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,7 @@ import com.sup2is.accountbook.databinding.FragmentStatisticsBinding;
 
 import java.util.ArrayList;
 
-public class StatisticsFragment extends Fragment {
+public class StatisticsFragment extends BaseFragment {
 
     private static final String TAG = StatisticsFragment.class.getSimpleName();
 
@@ -69,7 +68,7 @@ public class StatisticsFragment extends Fragment {
         data.setValueTextSize(15);
 
         statisticsBinding.pcContainer.setDrawHoleEnabled(true);
-        statisticsBinding.pcContainer.setTransparentCircleRadius(30f);
+        statisticsBinding.pcContainer.setTransparentCircleRadius(32f);
         statisticsBinding.pcContainer.setHoleRadius(30f);
         statisticsBinding.pcContainer.setData(data);
         statisticsBinding.pcContainer.setDescription("");
@@ -78,4 +77,8 @@ public class StatisticsFragment extends Fragment {
     }
 
 
+    @Override
+    public void refreshView() {
+
+    }
 }

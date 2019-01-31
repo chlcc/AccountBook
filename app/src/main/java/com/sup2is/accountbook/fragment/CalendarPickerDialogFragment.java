@@ -1,8 +1,6 @@
 package com.sup2is.accountbook.fragment;
 
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,13 +15,9 @@ import android.view.WindowManager;
 import com.sup2is.accountbook.R;
 import com.sup2is.accountbook.activity.MainActivity;
 import com.sup2is.accountbook.databinding.FragmentCalendarPickerBinding;
-import com.sup2is.accountbook.databinding.FragmentInputFormBinding;
-import com.sup2is.accountbook.databinding.LayoutActionbarBinding;
 import com.sup2is.accountbook.util.GlobalDate;
 
-import java.util.Calendar;
-
-public class CalendarPickerFragment extends DialogFragment {
+public class CalendarPickerDialogFragment extends DialogFragment {
 
 
     private static final int MAX_YEAR = 2099;
@@ -71,7 +65,7 @@ public class CalendarPickerFragment extends DialogFragment {
             int selectedYear = calendarPickerBinding.npYear.getValue();
             globalDate.setDate(selectedYear,selectedMonth,1);
             ((MainActivity)(getActivity())).setCalendarText(globalDate.getDate());
-
+            ((MainActivity)(getActivity())).refreshFragment();
             getDialog().dismiss();
         }
     }

@@ -1,41 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
 
-    <LinearLayout
-        android:layout_height="400dp"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:background="@drawable/rounded"
-        >
+        android:layout_height="match_parent">
 
-<!--
-        <android.support.design.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:text="날짜"
-            />-->
+        <LinearLayout
+            android:layout_height="500dp"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:background="@drawable/rounded"
+            >
 
-        <android.support.design.widget.TextInputEditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:text="분류"
-            />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@drawable/rounded_input_form"
+                >
 
-        <android.support.design.widget.TextInputEditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:text=""
-            />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="지출 저장하기"
+                    android:gravity="center_vertical"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="15dp"
+                    />
+            </LinearLayout>
 
 
-    </LinearLayout>
 
-</RelativeLayout>
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
 </layout>

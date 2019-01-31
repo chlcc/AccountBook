@@ -62,7 +62,7 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
                 dailyListViewFragment.onResume();
                 break;
             case 1:
-                calendarFragment.refreshView();
+                calendarFragment.setUserVisibleHint(calendarFragment.getUserVisibleHint());
                 break;
             case 2:
                 statisticsFragment.onResume();

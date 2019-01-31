@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.sup2is.accountbook.R;
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends BaseFragment {
 
     private static final String TAG = SettingsFragment.class.getSimpleName();
 
@@ -22,4 +22,8 @@ public class SettingsFragment extends Fragment {
     }
 
 
+    @Override
+    public void refreshView() {
+
+    }
 }

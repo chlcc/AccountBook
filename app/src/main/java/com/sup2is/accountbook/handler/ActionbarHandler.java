@@ -7,7 +7,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sup2is.accountbook.R;
-import com.sup2is.accountbook.fragment.CalendarPickerFragment;
+import com.sup2is.accountbook.activity.MainActivity;
+import com.sup2is.accountbook.fragment.CalendarPickerDialogFragment;
 import com.sup2is.accountbook.util.GlobalDate;
 
 public class ActionbarHandler {
@@ -21,6 +22,7 @@ public class ActionbarHandler {
         globalDate.previousMonth();
         parent = (RelativeLayout) view.getParent();
         ((TextView) parent.findViewById(R.id.tv_calendar)).setText(globalDate.getDate());
+        ((MainActivity)view.getContext()).refreshFragment();
     }
 
     public void onClickRightButton (View view) {
@@ -28,15 +30,15 @@ public class ActionbarHandler {
         globalDate.nextMonth();
         parent = (RelativeLayout) view.getParent();
         ((TextView) parent.findViewById(R.id.tv_calendar)).setText(globalDate.getDate());
+        ((MainActivity)view.getContext()).refreshFragment();
     }
 
     public void onClickCalendarPicker(View view) {
 
         FragmentManager fm = ((AppCompatActivity)view.getContext()).getSupportFragmentManager();
-        CalendarPickerFragment calendarPickerFragment = new CalendarPickerFragment();
+        CalendarPickerDialogFragment calendarPickerFragment = new CalendarPickerDialogFragment();
         calendarPickerFragment.show(fm,"calendar");
 
     }
-
 
 }

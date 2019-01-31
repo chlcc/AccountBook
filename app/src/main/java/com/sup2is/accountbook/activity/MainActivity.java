@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
     private TabPagerAdapter tabPagerAdapter;
 
+    private int tabPosition;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
 
         tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
 
+
+        binding.vpContainer.setOffscreenPageLimit(3);
         binding.vpContainer.setAdapter(tabPagerAdapter);
         binding.vpContainer.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
@@ -101,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 binding.vpContainer.setCurrentItem(tab.getPosition());
+                tabPosition = tab.getPosition();
                 tabPagerAdapter.refreshFragment(tab.getPosition());
             }
 
@@ -120,14 +125,12 @@ public class MainActivity extends AppCompatActivity {
         actionbarBinding.tvCalendar.setText(globalDate.getDate());
 
 
-        //daily list view
-
-
     }
 
-    public void refresh() {
-        tabPagerAdapter.notifyDataSetChanged();
+    public void refreshFragment() {
+        tabPagerAdapter.refreshFragment(tabPosition);
     }
+
 
     public void setCalendarText(String date) {
         actionbarBinding.tvCalendar.setText(date);

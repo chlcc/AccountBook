@@ -20,6 +20,9 @@ public class CalendarGridAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     GlobalDate globalDate;
 
+    public void setDayList(List<String> dayList) {
+        this.dayList = dayList;
+    }
 
     public CalendarGridAdapter(Context context, List<String> dayList) {
         this.dayList = dayList;
