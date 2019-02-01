@@ -79,13 +79,12 @@ public class DailyListViewFragment extends BaseFragment implements View.OnClickL
     public void refreshView() {
 
         globalDate = GlobalDate.getInstance();
-        globalDate.getDate();
+        globalDate.getYearMonthToString();
 
     }
 
     @Override
     public void onClick(View v) {
-
 
         FragmentManager fm = getFragmentManager();
         InputFormDialogFragment inputFormDialogFragment = new InputFormDialogFragment();

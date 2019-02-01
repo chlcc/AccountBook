@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
         //global date
         GlobalDate globalDate = GlobalDate.getInstance();
-        actionbarBinding.tvCalendar.setText(globalDate.getDate());
+        actionbarBinding.tvCalendar.setText(globalDate.getYearMonthToString());
 
 
     }

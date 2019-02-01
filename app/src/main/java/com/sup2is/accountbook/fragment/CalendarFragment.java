@@ -125,7 +125,7 @@ public class CalendarFragment extends BaseFragment {
     public void refreshView() {
 
         globalDate = GlobalDate.getInstance();
-        globalDate.getDate();
+        globalDate.getYearMonthToString();
 
         //adapter reset
 

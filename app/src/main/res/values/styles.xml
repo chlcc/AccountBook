@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar"></style><!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
@@ -27,5 +27,24 @@
         <item name="android:textColorPrimary">#000</item>
     </style>
 
+    <style name="CustomTextAppearance" parent="@android:style/TextAppearance">
+        <item name="colorControlNormal">@color/actionBar</item>
+        <item name="colorControlActivated">@color/actionBar</item>
+        <item name="colorControlHighlight">@color/actionBar</item>
+        <item name="android:textColorHint">#aaa</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="CustomSpinner" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+        <item name="android:background">@drawable/custom_spinner_drop_down</item>
+    </style>
+    
+    <style name="CustomDatePicker" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/actionBar</item>
+    </style>
+
+    <style name="CustomTimePicker" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/actionBar</item>
+    </style>
 
 </resources>

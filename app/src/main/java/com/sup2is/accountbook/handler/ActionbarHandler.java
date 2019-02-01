@@ -21,7 +21,7 @@ public class ActionbarHandler {
         globalDate = GlobalDate.getInstance();
         globalDate.previousMonth();
         parent = (RelativeLayout) view.getParent();
-        ((TextView) parent.findViewById(R.id.tv_calendar)).setText(globalDate.getDate());
+        ((TextView) parent.findViewById(R.id.tv_calendar)).setText(globalDate.getYearMonthToString());
         ((MainActivity)view.getContext()).refreshFragment();
     }
 
@@ -29,7 +29,7 @@ public class ActionbarHandler {
         globalDate = GlobalDate.getInstance();
         globalDate.nextMonth();
         parent = (RelativeLayout) view.getParent();
-        ((TextView) parent.findViewById(R.id.tv_calendar)).setText(globalDate.getDate());
+        ((TextView) parent.findViewById(R.id.tv_calendar)).setText(globalDate.getYearMonthToString());
         ((MainActivity)view.getContext()).refreshFragment();
     }
 
