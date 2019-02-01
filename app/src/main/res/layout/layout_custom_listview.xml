@@ -37,7 +37,7 @@
             android:textSize="12dp" />
 
         <TextView
-            android:id="@+id/tv_week"
+            android:id="@+id/tv_day_of_week"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

@@ -22,5 +22,9 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getTargetContext();
 
         assertEquals("com.sup2is.accountbook", appContext.getPackageName());
+
+
+
+
     }
 }

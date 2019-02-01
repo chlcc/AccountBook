@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.text.Editable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,10 +26,13 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.sup2is.accountbook.R;
+import com.sup2is.accountbook.database.DBManager;
 import com.sup2is.accountbook.databinding.FragmentInputFormBinding;
 import com.sup2is.accountbook.databinding.LayoutDatePickerBinding;
 import com.sup2is.accountbook.databinding.LayoutTimePickerBinding;
 import com.sup2is.accountbook.dialog.CustomDialog;
+import com.sup2is.accountbook.model.Account;
+import com.sup2is.accountbook.model.DateBundle;
 import com.sup2is.accountbook.util.GlobalDate;
 
 import java.util.ArrayList;
@@ -44,6 +48,8 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
 
     private TimePickerDialog timePickerDialog;
 
+    private DBManager dbManager;
+
 
     @Nullable
     @Override
@@ -56,6 +62,7 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
         View view = inflater.inflate(R.layout.fragment_input_form,container,false);
         inputFormBinding = DataBindingUtil.bind(view);
 
+        dbManager = new DBManager(getContext(),1);
 
         ArrayList<String> methodList = new ArrayList<>();
         methodList.add("지출");
@@ -129,6 +136,27 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
                 timePickerDialog.show();
                 break;
             case R.id.btn_ok:
+
+                String date = inputFormBinding.tvDate.getText().toString();
+                String[] dates = date.split(".");
+
+                String time = inputFormBinding.tvDate.getText().toString();
+                String[] times = time.split(":");
+
+                Editable money = inputFormBinding.etMoney.getText();
+                String method = inputFormBinding.acsMethod.getSelectedItem().toString();
+//                String group = inputFormBinding.
+//                String spending;
+//                String content;
+
+//                DateBundle dateBundle = new DateBundle(dates,GlobalDate.getDayOfWeekToDay(dates),times);
+//                Account account = new Account(dateBundle,)
+//
+//                dbManager.insertItem(account);
+
+
+
+
                 getDialog().dismiss();
                 break;
             case R.id.btn_cancel:

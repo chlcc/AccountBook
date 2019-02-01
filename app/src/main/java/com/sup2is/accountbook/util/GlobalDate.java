@@ -1,5 +1,6 @@
 package com.sup2is.accountbook.util;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -66,6 +67,11 @@ public class GlobalDate {
         return calendar.get(Calendar.MINUTE);
     }
 
+    public int getSeconds(){
+        return calendar.get(Calendar.SECOND);
+    }
+
+
     public String previousMonth() {
         calendar.add(calendar.MONTH, -1);
         return getYearMonthToString();
@@ -83,4 +89,16 @@ public class GlobalDate {
     public void setDate(int selectedYear, int selectedMonth, int selectedDay) {
         calendar.set(selectedYear,selectedMonth,selectedDay);
     }
+
+
+    /**
+    * @param dates is year,month,day set
+    * */
+    public static String getDayOfWeekToDay(String[] dates) {
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+        Date dTemp = new Date(Integer.parseInt(dates[0]),Integer.parseInt(dates[1]),Integer.parseInt(dates[2])-1);
+        return sdf.format(dTemp);
+
+    }
+
 }

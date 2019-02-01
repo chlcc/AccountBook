@@ -12,7 +12,8 @@ import android.view.ViewGroup;
 import com.sup2is.accountbook.R;
 import com.sup2is.accountbook.adapter.DailyListViewAdapter;
 import com.sup2is.accountbook.databinding.FragmentDailyListviewBinding;
-import com.sup2is.accountbook.model.DailyListItem;
+import com.sup2is.accountbook.model.Account;
+import com.sup2is.accountbook.model.DateBundle;
 import com.sup2is.accountbook.util.GlobalDate;
 
 import java.util.ArrayList;
@@ -33,27 +34,15 @@ public class DailyListViewFragment extends BaseFragment implements View.OnClickL
         View view = inflater.inflate(R.layout.fragment_daily_listview,container,false);
         dailyListviewBinding = DataBindingUtil.bind(view);
 
-        ArrayList<DailyListItem> dailyListItems = new ArrayList<>();
+        ArrayList<Account> accounts = new ArrayList<>();
 
         //todo db에서 global date의 해당하는 값들 전부 불러서 dailyListItem 객체로 변환
 
-        dailyListItems.add(new DailyListItem("24","16:30","목","99,000","에어팟 샀음","기타","카드"));
-        dailyListItems.add(new DailyListItem("15","16:30","금","99,000","에어팟 샀음","기타","카드"));
-        dailyListItems.add(new DailyListItem("13","16:30","토","99,000","에어팟 샀음","기타","카드"));
-        dailyListItems.add(new DailyListItem("10","16:30","일","99,000","에어팟 샀음","기타","카드"));
-        dailyListItems.add(new DailyListItem("10","16:30","목","99,000","에어팟 샀음","기타","카드"));
-        dailyListItems.add(new DailyListItem("10","16:30","목","99,000","에어팟 샀음","기타","카드"));
-        dailyListItems.add(new DailyListItem("10","16:30","목","99,000","에어팟 샀음","기타","카드"));
-        dailyListItems.add(new DailyListItem("10","16:30","목","99,000","에어팟 샀음","기타","카드"));
-        dailyListItems.add(new DailyListItem("10","16:30","목","99,000","에어팟 샀음","기타","카드"));
-        dailyListItems.add(new DailyListItem("10","16:30","목","99,000","에어팟 샀음","기타","카드"));
-        dailyListItems.add(new DailyListItem("10","16:30","목","99,000","에어팟 샀음","기타","카드"));
-        dailyListItems.add(new DailyListItem("10","16:30","목","99,000","에어팟 샀음","기타","카드"));
-        dailyListItems.add(new DailyListItem("10","16:30","목","99,000","에어팟 샀음","기타","카드"));
-        dailyListItems.add(new DailyListItem("10","16:30","목","99,000","에어팟 샀음","기타","카드"));
-        dailyListItems.add(new DailyListItem("10","16:30","목","99,000","에어팟 샀음","기타","카드"));
 
-        DailyListViewAdapter dailyListViewAdapter = new DailyListViewAdapter(getContext(),dailyListItems);
+
+        accounts.add(new Account(new DateBundle("2018","1","26","목","6","30","31"),"559,000","지출","카드","식비","돈없다 .."));
+
+        DailyListViewAdapter dailyListViewAdapter = new DailyListViewAdapter(getContext(), accounts);
         dailyListviewBinding.lvDailyList.setAdapter(dailyListViewAdapter);
 
 

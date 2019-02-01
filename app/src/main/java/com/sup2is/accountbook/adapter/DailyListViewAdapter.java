@@ -8,30 +8,30 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.sup2is.accountbook.R;
-import com.sup2is.accountbook.model.DailyListItem;
+import com.sup2is.accountbook.model.Account;
 
 import java.util.ArrayList;
 
 public class DailyListViewAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<DailyListItem> dailyListItems;
+    private ArrayList<Account> accounts;
     private LayoutInflater inflater;
 
-    public DailyListViewAdapter(Context context, ArrayList<DailyListItem> dailyListItems) {
+    public DailyListViewAdapter(Context context, ArrayList<Account> accounts) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
-        this.dailyListItems = dailyListItems;
+        this.accounts = accounts;
     }
 
     @Override
     public int getCount() {
-        return dailyListItems.size();
+        return accounts.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return dailyListItems.get(position);
+        return accounts.get(position);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class DailyListViewAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         ViewHolder viewHolder;
-        DailyListItem item;
+        Account item;
 
         if(convertView == null) {
             convertView = inflater.inflate(R.layout.layout_custom_listview,parent,false);
@@ -56,21 +56,21 @@ public class DailyListViewAdapter extends BaseAdapter {
             viewHolder.group = convertView.findViewById(R.id.tv_group);
             viewHolder.method = convertView.findViewById(R.id.tv_method);
             viewHolder.time = convertView.findViewById(R.id.tv_time);
-            viewHolder.week = convertView.findViewById(R.id.tv_week);
+            viewHolder.tv_day_of_week = convertView.findViewById(R.id.tv_day_of_week);
             viewHolder.money = convertView.findViewById(R.id.tv_money);
 
             convertView.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        item = dailyListItems.get(position);
+        item = accounts.get(position);
 
-        viewHolder.day.setText(item.getDay());
+        viewHolder.day.setText(item.getDateBundle().getDay());
         viewHolder.content.setText(item.getContent());
         viewHolder.group.setText(item.getGroup());
         viewHolder.method.setText(item.getMethod());
-        viewHolder.time.setText(item.getTime());
-        viewHolder.week.setText(item.getWeek());
+        viewHolder.time.setText(item.getDateBundle().getHour() + ":" + item.getDateBundle().getMinute());
+        viewHolder.tv_day_of_week.setText(item.getDateBundle().getDayOfWeek());
         viewHolder.money.setText(item.getMoney());
 
         return convertView;
@@ -80,7 +80,7 @@ public class DailyListViewAdapter extends BaseAdapter {
 
         private TextView day;
         private TextView time;
-        private TextView week;
+        private TextView tv_day_of_week;
         private TextView money;
         private TextView content;
         private TextView group;
