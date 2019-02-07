@@ -1,10 +1,8 @@
 package com.sup2is.accountbook.fragment;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -12,30 +10,27 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
-import android.text.Editable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.sup2is.accountbook.R;
+import com.sup2is.accountbook.application.AccountBookApplication;
 import com.sup2is.accountbook.database.DBManager;
 import com.sup2is.accountbook.databinding.FragmentInputFormBinding;
-import com.sup2is.accountbook.databinding.LayoutDatePickerBinding;
-import com.sup2is.accountbook.databinding.LayoutTimePickerBinding;
 import com.sup2is.accountbook.dialog.CustomDialog;
 import com.sup2is.accountbook.model.Account;
 import com.sup2is.accountbook.model.DateBundle;
 import com.sup2is.accountbook.util.GlobalDate;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class InputFormDialogFragment extends DialogFragment implements View.OnClickListener {
 
@@ -50,6 +45,7 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
 
     private DBManager dbManager;
 
+    private AccountBookApplication application;
 
     @Nullable
     @Override
@@ -62,7 +58,8 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
         View view = inflater.inflate(R.layout.fragment_input_form,container,false);
         inputFormBinding = DataBindingUtil.bind(view);
 
-        dbManager = new DBManager(getContext(),1);
+        application = (AccountBookApplication) getActivity().getApplication();
+        dbManager = application.getDbManager();
 
         ArrayList<String> methodList = new ArrayList<>();
         methodList.add("지출");
@@ -89,15 +86,15 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
         inputFormBinding.acsGroup.setAdapter(groupAdapter);
 
 
-        globalDate.setCurrentTime();
 
-        inputFormBinding.tvDate.setText(globalDate.getYearMonthDayToString());
-        inputFormBinding.tvTime.setText(globalDate.getTimeToString());
+        //단순 input은 global date를 사용하면 안됨
+        Calendar calendar = Calendar.getInstance();
 
+        inputFormBinding.tvDate.setText(calendar.get(Calendar.YEAR) + "." + (calendar.get(Calendar.MONTH) + 1) + "." + calendar.get(Calendar.DATE));
+        inputFormBinding.tvTime.setText(calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE));
 
-        datePickerDialog = new DatePickerDialog(getContext(),R.style.CustomDatePicker,new DatePickerListener(),globalDate.getYear(),globalDate.getMonth()-1,globalDate.getDay());
-        timePickerDialog = new TimePickerDialog(getContext(),R.style.CustomTimePicker,new TimePickerListener(),globalDate.getHour(),globalDate.getMinute(),false);
-
+        datePickerDialog = new DatePickerDialog(getContext(),R.style.CustomDatePicker,new DatePickerListener(),calendar.get(Calendar.YEAR),(calendar.get(Calendar.MONTH)),calendar.get(Calendar.DATE));
+        timePickerDialog = new TimePickerDialog(getContext(),R.style.CustomTimePicker,new TimePickerListener(),calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false);
 
         inputFormBinding.ibAddGroup.setOnClickListener(this);
         inputFormBinding.ibAddSpending.setOnClickListener(this);
@@ -138,25 +135,25 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
             case R.id.btn_ok:
 
                 String date = inputFormBinding.tvDate.getText().toString();
-                String[] dates = date.split(".");
+                String[] dates = date.split("\\.");
 
-                String time = inputFormBinding.tvDate.getText().toString();
+                String time = inputFormBinding.tvTime.getText().toString();
                 String[] times = time.split(":");
 
-                Editable money = inputFormBinding.etMoney.getText();
+                String money = inputFormBinding.etMoney.getText().toString();
                 String method = inputFormBinding.acsMethod.getSelectedItem().toString();
-//                String group = inputFormBinding.
-//                String spending;
-//                String content;
+                String group = inputFormBinding.acsGroup.getSelectedItem().toString();
+                String spending = inputFormBinding.acsSpending.getSelectedItem().toString();
+                String content = inputFormBinding.etContent.getText().toString();
 
-//                DateBundle dateBundle = new DateBundle(dates,GlobalDate.getDayOfWeekToDay(dates),times);
-//                Account account = new Account(dateBundle,)
-//
-//                dbManager.insertItem(account);
+                String dayOfWeek = getDayOfWeek(dates[0],dates[1],dates[2]);
+                DateBundle dateBundle = new DateBundle(dates[0],dates[1],dates[2],dayOfWeek,times[0],times[1],"0");
+                Account account = new Account(dateBundle,money,method,group,spending,content);
+                dbManager.insertItem(account);
 
-
-
-
+                //DailyListViewFragment
+                DailyListViewFragment dailyListViewFragment = (DailyListViewFragment) getFragmentManager().getFragments().get(0);
+                dailyListViewFragment.setUserVisibleHint(true);
                 getDialog().dismiss();
                 break;
             case R.id.btn_cancel:
@@ -183,5 +180,28 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
             inputFormBinding.tvDate.setText(year+ "." + (month + 1) + "." + dayOfMonth);
         }
     }
+
+    private String getDayOfWeek(String year, String month, String day) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date(Integer.parseInt(year),Integer.parseInt(month),Integer.parseInt(day)));
+        switch (cal.get(Calendar.DAY_OF_WEEK)) {
+            case 1:
+                return "일";
+            case 2:
+                return "월";
+            case 3:
+                return "화";
+            case 4:
+                return "수";
+            case 5:
+                return "목";
+            case 6:
+                return "금";
+            case 7:
+                return "토";
+        }
+        return null;
+    }
+
 
 }

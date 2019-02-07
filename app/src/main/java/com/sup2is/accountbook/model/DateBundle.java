@@ -1,5 +1,7 @@
 package com.sup2is.accountbook.model;
 
+import java.util.Date;
+
 public class DateBundle {
 
     private final String year;
@@ -10,14 +12,6 @@ public class DateBundle {
     private final String minute;
     private final String seconds;
 
-
-    /**
-     * @param dates is year, month, day set
-     * @param times is hour, minute set
-     * */
-    public DateBundle(String[] dates,String dayOfWeek, String[] times) {
-      this(dates[0],dates[1],dates[2],dayOfWeek,times[0],times[1],"0");
-    }
 
     public DateBundle(String year, String month, String day, String dayOfWeek, String hour, String minute, String seconds) {
         this.year = year;
@@ -56,4 +50,5 @@ public class DateBundle {
     public String getSeconds() {
         return seconds;
     }
+
 }

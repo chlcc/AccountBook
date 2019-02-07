@@ -11,6 +11,7 @@ import com.sup2is.accountbook.R;
 import com.sup2is.accountbook.model.Account;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DailyListViewAdapter extends BaseAdapter {
 
@@ -86,5 +87,11 @@ public class DailyListViewAdapter extends BaseAdapter {
         private TextView group;
         private TextView method;
 
+    }
+
+    public void updateList(ArrayList<Account> newList) {
+        this.accounts.clear();
+        this.accounts = newList;
+        this.notifyDataSetChanged();
     }
 }

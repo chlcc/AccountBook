@@ -1,15 +1,14 @@
 package com.sup2is.accountbook.model;
 
-import java.util.Date;
-
 public class Account {
 
+    private int idx;
     private final DateBundle dateBundle;
     private final String money;
     private final String method;
     private final String group;
     private final String spending;
-    private String content;
+    private final String content;
 
     public Account(DateBundle dateBundle, String money, String method, String group, String spending ,String content) {
         this.dateBundle = dateBundle;
@@ -17,9 +16,6 @@ public class Account {
         this.method = method;
         this.group = group;
         this.spending = spending;
-    }
-
-    public void setContent(String content) {
         this.content = content;
     }
 

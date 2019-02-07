@@ -5,8 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 
-import java.util.Date;
-
 public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DB_NAME = "account_book.db";
@@ -27,7 +25,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "day_of_week TEXT,"
                 + "hour TEXT,"
                 + "minute TEXT,"
-                + "second TEXT,"
+                + "seconds TEXT,"
                 + "money TEXT,"
                 + "method TEXT,"
                 + "class TEXT,"
@@ -39,6 +37,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL("DROP TABLE IF EXISTS "+TBL_NAME);
+        onCreate(db);
     }
 }

@@ -1,9 +1,11 @@
 package com.sup2is.accountbook.fragment;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,8 @@ import android.view.ViewGroup;
 
 import com.sup2is.accountbook.R;
 import com.sup2is.accountbook.adapter.DailyListViewAdapter;
+import com.sup2is.accountbook.application.AccountBookApplication;
+import com.sup2is.accountbook.database.DBManager;
 import com.sup2is.accountbook.databinding.FragmentDailyListviewBinding;
 import com.sup2is.accountbook.model.Account;
 import com.sup2is.accountbook.model.DateBundle;
@@ -18,7 +22,7 @@ import com.sup2is.accountbook.util.GlobalDate;
 
 import java.util.ArrayList;
 
-public class DailyListViewFragment extends BaseFragment implements View.OnClickListener {
+public class DailyListViewFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = DailyListViewFragment.class.getSimpleName();
 
@@ -26,61 +30,77 @@ public class DailyListViewFragment extends BaseFragment implements View.OnClickL
 
     private FragmentDailyListviewBinding dailyListviewBinding;
 
+    private AccountBookApplication application;
+
+    private DBManager dbManager;
+
+    private DailyListViewAdapter dailyListViewAdapter;
+    private ArrayList<Account> accounts ;
+    private boolean isVisible = false;
+
+
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        globalDate = GlobalDate.getInstance();
+
         View view = inflater.inflate(R.layout.fragment_daily_listview,container,false);
         dailyListviewBinding = DataBindingUtil.bind(view);
 
-        ArrayList<Account> accounts = new ArrayList<>();
+        DateBundle temp = new DateBundle(
+                String.valueOf(globalDate.getYear()),
+                String.valueOf(globalDate.getMonth()),
+                String.valueOf(globalDate.getDay()),
+                null,"0","0","0");
 
-        //todo db에서 global date의 해당하는 값들 전부 불러서 dailyListItem 객체로 변환
-
-
-
-        accounts.add(new Account(new DateBundle("2018","1","26","목","6","30","31"),"559,000","지출","카드","식비","돈없다 .."));
-
-        DailyListViewAdapter dailyListViewAdapter = new DailyListViewAdapter(getContext(), accounts);
+        application = (AccountBookApplication) getActivity().getApplication();
+        dbManager = application.getDbManager();
+        accounts = dbManager.selectByDate(temp);
+        dailyListViewAdapter = new DailyListViewAdapter(getContext(), accounts);
         dailyListviewBinding.lvDailyList.setAdapter(dailyListViewAdapter);
-
-
         dailyListviewBinding.fabInput.setOnClickListener(this);
-
         return view;
-
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        globalDate = GlobalDate.getInstance();
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-
-    @Override
-    public void refreshView() {
-
         globalDate = GlobalDate.getInstance();
-        globalDate.getYearMonthToString();
-
     }
 
     @Override
     public void onClick(View v) {
-
         FragmentManager fm = getFragmentManager();
         InputFormDialogFragment inputFormDialogFragment = new InputFormDialogFragment();
         inputFormDialogFragment.show(fm,"input");
-
-//        new InputDialog(getActivity());
-
-
     }
+
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser) {
+            if(getView() != null) {
+                isVisible = true;
+                DateBundle temp = new DateBundle(
+                        String.valueOf(globalDate.getYear()),
+                        String.valueOf(globalDate.getMonth()),
+                        "0",
+                        null,"0","0","0");
+                accounts = dbManager.selectByDate(temp);
+                dailyListViewAdapter.updateList(accounts);
+            }else {
+                isVisible = false;
+            }
+        }
+    }
+
 }

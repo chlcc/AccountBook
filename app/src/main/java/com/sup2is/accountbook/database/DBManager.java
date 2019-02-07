@@ -27,27 +27,28 @@ public class DBManager {
 
     public void insertItem(Account item) {
         String sql = "INSERT INTO " + DBHelper.TBL_NAME + " VALUES ("
-                + item.getDateBundle().getYear() + ","
-                + item.getDateBundle().getMonth() + ","
-                + item.getDateBundle().getDay() + ","
-                + item.getDateBundle().getDayOfWeek() + ","
-                + item.getDateBundle().getHour() + ","
-                + item.getDateBundle().getMinute() + ","
-                + item.getDateBundle().getSeconds() + ","
-                + item.getMoney() + ","
-                + item.getMethod() + ","
-                + item.getSpending()+ ","
-                + item.getContent()+ ",";
+                + "NULL" + ","
+                + "'" + item.getDateBundle().getYear()+ "'" + ","
+                + "'" +item.getDateBundle().getMonth()+ "'" + ","
+                + "'" +item.getDateBundle().getDay()+ "'" + ","
+                + "'" +item.getDateBundle().getDayOfWeek()+ "'" + ","
+                + "'" +item.getDateBundle().getHour()+ "'" + ","
+                + "'" +item.getDateBundle().getMinute()+ "'" + ","
+                + "'" +item.getDateBundle().getSeconds()+ "'" + ","
+                + "'" +item.getMoney()+ "'" + ","
+                + "'" +item.getMethod()+ "'" + ","
+                + "'" +item.getGroup()+ "'" + ","
+                + "'" +item.getSpending()+ "'" + ","
+                + "'" +item.getContent()+ "'" + ")";
         db.execSQL(sql);
     }
 
     public ArrayList<Account> selectByDate(DateBundle bundle) {
 
         String sql = "SELECT * FROM " + DBHelper.TBL_NAME + " WHERE "
-                + "year =" + bundle.getYear()
-                + "month =" + bundle.getYear()
-                + "day =" + bundle.getYear()
-                + "ORDER BY day DESC";
+                + "year = " + "'" + bundle.getYear() + "' " + "AND "
+                + "month = " + "'"+ bundle.getMonth() + "' "
+                + "ORDER BY day, idx DESC";
 
         Cursor results = db.rawQuery(sql,null);
         results.moveToFirst();
@@ -72,6 +73,7 @@ public class DBManager {
                     results.getString(results.getColumnIndex("class")),
                     results.getString(results.getColumnIndex("spending")),
                     results.getString(results.getColumnIndex("content"))));
+            results.moveToNext();
         }
         results.close();
         return accounts;

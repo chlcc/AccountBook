@@ -1,5 +1,7 @@
 package com.sup2is.accountbook.util;
 
+import com.sup2is.accountbook.model.DateBundle;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,7 +15,7 @@ public class GlobalDate {
     private static GlobalDate instance;
 
     public static GlobalDate getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new GlobalDate();
         }
         return instance;
@@ -24,7 +26,7 @@ public class GlobalDate {
         calendar.setTime(new Date());
     }
 
-    public void setCurrentTime(){
+    public void setCurrentTime() {
         calendar.setTime(new Date());
     }
 
@@ -35,23 +37,24 @@ public class GlobalDate {
     public String getYearMonthToString() {
         return getYear() + "." + getMonth();
     }
+
     public String getYearMonthDayToString() {
-        return getYear() + "." + getMonth()  + "." + getDay();
+        return getYear() + "." + getMonth() + "." + getDay();
     }
 
     public String getTimeToString() {
         return getHour() + ":" + getMinute();
     }
 
-    public int getYear(){
+    public int getYear() {
         return calendar.get(Calendar.YEAR);
     }
 
-    public int getMonth(){
-        return calendar.get(Calendar.MONTH)+1;
+    public int getMonth() {
+        return calendar.get(Calendar.MONTH) + 1;
     }
 
-    public int getDay(){
+    public int getDay() {
         return calendar.get(Calendar.DATE);
     }
 
@@ -63,14 +66,13 @@ public class GlobalDate {
         return calendar.get(Calendar.HOUR_OF_DAY);
     }
 
-    public int getMinute(){
+    public int getMinute() {
         return calendar.get(Calendar.MINUTE);
     }
 
-    public int getSeconds(){
+    public int getSeconds() {
         return calendar.get(Calendar.SECOND);
     }
-
 
     public String previousMonth() {
         calendar.add(calendar.MONTH, -1);
@@ -87,18 +89,8 @@ public class GlobalDate {
     }
 
     public void setDate(int selectedYear, int selectedMonth, int selectedDay) {
-        calendar.set(selectedYear,selectedMonth,selectedDay);
+        calendar.set(selectedYear, selectedMonth, selectedDay);
     }
 
-
-    /**
-    * @param dates is year,month,day set
-    * */
-    public static String getDayOfWeekToDay(String[] dates) {
-        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
-        Date dTemp = new Date(Integer.parseInt(dates[0]),Integer.parseInt(dates[1]),Integer.parseInt(dates[2])-1);
-        return sdf.format(dTemp);
-
-    }
 
 }
