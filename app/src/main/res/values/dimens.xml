@@ -21,7 +21,8 @@
 
     <!--SplashActivity.java-->
     <dimen name="splash_tv_app_version_margin_bottom">16dp</dimen>
-    <dimen name="listview_layout_height">70dp</dimen>
+    <dimen name="custom_listview_layout_height">50dp</dimen>
+    <dimen name="custom_listview_add_layout_height">35dp</dimen>
 
 
 
@@ -43,5 +44,6 @@
     <dimen name="custom_dialog_btn_margin_Right">10dp</dimen>
     <dimen name="custom_dialog_btn_layout_height">25dp</dimen>
     <dimen name="input_form_btn_layout_height">30dp</dimen>
+    <dimen name="custom_listview_tv_default_margin_left">5dp</dimen>
 
 </resources>

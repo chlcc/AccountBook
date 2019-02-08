@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,7 +22,7 @@ import com.sup2is.accountbook.util.GlobalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class CalendarFragment extends BaseFragment {
+public class CalendarFragment extends Fragment {
 
 
     private static final String TAG = CalendarFragment.class.getSimpleName();
@@ -116,21 +117,10 @@ public class CalendarFragment extends BaseFragment {
 
         for(int i = dayList.size(); i < GRID_COUNT; i ++) {
             dayList.add("");
+
        }
 
     }
-
-
-    @Override
-    public void refreshView() {
-
-        globalDate = GlobalDate.getInstance();
-        globalDate.getYearMonthToString();
-
-        //adapter reset
-
-    }
-
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {

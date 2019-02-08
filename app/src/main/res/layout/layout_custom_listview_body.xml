@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/custom_listview_add_layout_height"
+    android:orientation="horizontal"
+    android:weightSum="10">
+
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="35dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/stroke_listview_border"
+        android:gravity="center"
+        android:text="16:13"
+        android:textColor="@color/black"
+        android:textSize="12dp" />
+
+
+    <LinearLayout
+        android:layout_width="35dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/stroke_listview_border"
+        android:orientation="vertical"
+        android:padding="1dp">
+
+        <TextView
+            android:id="@+id/tv_spending"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="카드"
+            android:textColor="@color/black"
+            android:textSize="10dp" />
+
+        <TextView
+            android:id="@+id/tv_group"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="식비"
+            android:textColor="@color/black"
+            android:textSize="10dp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/stroke_listview_border"
+        android:orientation="vertical"
+
+        >
+
+        <TextView
+            android:id="@+id/tv_money"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical|right"
+            android:text="99,900"
+            android:textColor="@color/black" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.1dp"
+            android:background="#aaa" />
+
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="@dimen/custom_listview_tv_default_margin_left"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="회사사람들이랑 밥먹음"
+            android:textColor="@color/black"
+            android:textSize="10dp" />
+    </LinearLayout>
+
+</LinearLayout>

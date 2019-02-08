@@ -83,7 +83,6 @@ public class DailyListViewFragment extends Fragment implements View.OnClickListe
         inputFormDialogFragment.show(fm,"input");
     }
 
-
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
