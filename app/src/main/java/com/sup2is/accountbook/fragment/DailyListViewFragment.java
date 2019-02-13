@@ -7,12 +7,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.sup2is.accountbook.R;
-import com.sup2is.accountbook.adapter.DailyListViewAdapter;
+import com.sup2is.accountbook.adapter.DailyRecycleViewAdapter;
 import com.sup2is.accountbook.application.AccountBookApplication;
 import com.sup2is.accountbook.database.DBManager;
 import com.sup2is.accountbook.databinding.FragmentDailyListviewBinding;
@@ -34,7 +35,7 @@ public class DailyListViewFragment extends Fragment implements View.OnClickListe
 
     private DBManager dbManager;
 
-    private DailyListViewAdapter dailyListViewAdapter;
+    private DailyRecycleViewAdapter dailyRecycleViewAdapter;
     private ArrayList<Account> accounts ;
     private boolean isVisible = false;
 
@@ -58,8 +59,11 @@ public class DailyListViewFragment extends Fragment implements View.OnClickListe
         application = (AccountBookApplication) getActivity().getApplication();
         dbManager = application.getDbManager();
         accounts = dbManager.selectByDate(temp);
-        dailyListViewAdapter = new DailyListViewAdapter(getContext(), accounts);
-        dailyListviewBinding.lvDailyList.setAdapter(dailyListViewAdapter);
+
+        dailyRecycleViewAdapter = new DailyRecycleViewAdapter(getContext(),accounts);
+        dailyListviewBinding.rvDailyList.setLayoutManager(new LinearLayoutManager(getContext()));
+        dailyListviewBinding.rvDailyList.setAdapter(dailyRecycleViewAdapter);
+
         dailyListviewBinding.fabInput.setOnClickListener(this);
         return view;
     }
@@ -95,7 +99,7 @@ public class DailyListViewFragment extends Fragment implements View.OnClickListe
                         "0",
                         null,"0","0","0");
                 accounts = dbManager.selectByDate(temp);
-                dailyListViewAdapter.updateList(accounts);
+                dailyRecycleViewAdapter.updateList(accounts);
             }else {
                 isVisible = false;
             }

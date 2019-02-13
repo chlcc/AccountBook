@@ -30,7 +30,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "method TEXT,"
                 + "class TEXT,"
                 + "spending TEXT,"
-                + "content TEXT"
+                + "content TEXT,"
+                + "type TEXT"
                 + ")";
         db.execSQL(createSql);
     }

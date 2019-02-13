@@ -1,7 +1,5 @@
 package com.sup2is.accountbook.model;
 
-import java.util.Date;
-
 public class DateBundle {
 
     private final String year;

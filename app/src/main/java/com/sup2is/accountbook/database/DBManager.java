@@ -28,7 +28,7 @@ public class DBManager {
     public void insertItem(Account item) {
         String sql = "INSERT INTO " + DBHelper.TBL_NAME + " VALUES ("
                 + "NULL" + ","
-                + "'" + item.getDateBundle().getYear()+ "'" + ","
+                + "'" +item.getDateBundle().getYear()+ "'" + ","
                 + "'" +item.getDateBundle().getMonth()+ "'" + ","
                 + "'" +item.getDateBundle().getDay()+ "'" + ","
                 + "'" +item.getDateBundle().getDayOfWeek()+ "'" + ","
@@ -39,16 +39,19 @@ public class DBManager {
                 + "'" +item.getMethod()+ "'" + ","
                 + "'" +item.getGroup()+ "'" + ","
                 + "'" +item.getSpending()+ "'" + ","
-                + "'" +item.getContent()+ "'" + ")";
+                + "'" +item.getContent()+ "'" + ","
+                + "'" +item.getType()+ "'" + ")";
         db.execSQL(sql);
     }
+
+
 
     public ArrayList<Account> selectByDate(DateBundle bundle) {
 
         String sql = "SELECT * FROM " + DBHelper.TBL_NAME + " WHERE "
                 + "year = " + "'" + bundle.getYear() + "' " + "AND "
                 + "month = " + "'"+ bundle.getMonth() + "' "
-                + "ORDER BY day, idx DESC";
+                + "ORDER BY CAST(day AS REAL) DESC";
 
         Cursor results = db.rawQuery(sql,null);
         results.moveToFirst();
@@ -72,11 +75,22 @@ public class DBManager {
                     results.getString(results.getColumnIndex("method")),
                     results.getString(results.getColumnIndex("class")),
                     results.getString(results.getColumnIndex("spending")),
-                    results.getString(results.getColumnIndex("content"))));
+                    results.getString(results.getColumnIndex("content")),
+                    results.getString(results.getColumnIndex("type"))));
             results.moveToNext();
         }
         results.close();
         return accounts;
     }
 
+    public String getItemType(String day) {
+//        String sql = "SELECT EXISTS  FROM " + DBHelper.TBL_NAME + " WHERE "
+//                + "day = " + "'"+ day + "'";
+
+        String sql = "SELECT EXISTS ( SELECT * FROM " + DBHelper.TBL_NAME + " WHERE " + "day = " + "'" + day +"')";
+
+        Cursor results = db.rawQuery(sql,null);
+        results.moveToFirst();
+        return results.getString(0);
+    }
 }

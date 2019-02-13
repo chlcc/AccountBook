@@ -148,7 +148,9 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
 
                 String dayOfWeek = getDayOfWeek(dates[0],dates[1],dates[2]);
                 DateBundle dateBundle = new DateBundle(dates[0],dates[1],dates[2],dayOfWeek,times[0],times[1],"0");
-                Account account = new Account(dateBundle,money,method,group,spending,content);
+
+                String type = dbManager.getItemType(dates[2]);
+                Account account = new Account(dateBundle,money,method,group,spending,content,type);
                 dbManager.insertItem(account);
 
                 //DailyListViewFragment
@@ -169,7 +171,7 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
 
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            inputFormBinding.tvTime.setText(hourOfDay+ ":" + minute);
+            inputFormBinding.tvTime.setText(String.format("%02d:%02d", hourOfDay, minute));
         }
     }
 
