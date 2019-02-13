@@ -68,18 +68,18 @@ public class DailyRecycleViewAdapter extends RecyclerView.Adapter<DailyRecycleVi
         if (baseViewHolder instanceof HeaderViewHolder) {
             Log.d(TAG , "viewholder type is header");
             Log.d(TAG , "item day is " + account.getDateBundle().getDay());
-            int incoming = 0;
-            int spending = 0;
+            long incoming = 0;
+            long spending = 0;
             int currentDay = Integer.parseInt(account.getDateBundle().getDay());
 
             for (Account temp : accounts) {
                 if (currentDay == Integer.parseInt(temp.getDateBundle().getDay())) {
                     if (temp.getMethod().equals("수입")) {
-                        incoming += Integer.parseInt(temp.getMoney());
+                        incoming += Long.parseLong(temp.getMoney());
                     }
 
                     if (temp.getMethod().equals("지출")) {
-                        spending += Integer.parseInt(temp.getMoney());
+                        spending += Long.parseLong(temp.getMoney());
                     }
                 }
             }

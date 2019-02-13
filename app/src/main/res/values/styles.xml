@@ -27,12 +27,13 @@
         <item name="android:textColorPrimary">#000</item>
     </style>
 
-    <style name="CustomTextAppearance" parent="@android:style/TextAppearance">
+    <style name="CustomTextAppearance" parent="@style/Theme.AppCompat">
         <item name="colorControlNormal">@color/actionBar</item>
         <item name="colorControlActivated">@color/actionBar</item>
         <item name="colorControlHighlight">@color/actionBar</item>
         <item name="android:textColorHint">#aaa</item>
         <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">13dp</item>
     </style>
 
     <style name="CustomSpinner" parent="@android:style/Theme.Holo.Light.DarkActionBar">

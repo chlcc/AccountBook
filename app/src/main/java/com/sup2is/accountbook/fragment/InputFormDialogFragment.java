@@ -88,10 +88,10 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
 
 
         //단순 input은 global date를 사용하면 안됨
-        Calendar calendar = Calendar.getInstance();
 
+        Calendar calendar = Calendar.getInstance();
         inputFormBinding.tvDate.setText(calendar.get(Calendar.YEAR) + "." + (calendar.get(Calendar.MONTH) + 1) + "." + calendar.get(Calendar.DATE));
-        inputFormBinding.tvTime.setText(calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE));
+        inputFormBinding.tvTime.setText(String.format("%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)));
 
         datePickerDialog = new DatePickerDialog(getContext(),R.style.CustomDatePicker,new DatePickerListener(),calendar.get(Calendar.YEAR),(calendar.get(Calendar.MONTH)),calendar.get(Calendar.DATE));
         timePickerDialog = new TimePickerDialog(getContext(),R.style.CustomTimePicker,new TimePickerListener(),calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false);
@@ -133,6 +133,11 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
                 timePickerDialog.show();
                 break;
             case R.id.btn_ok:
+                String money = inputFormBinding.etMoney.getText().toString();
+                if(money.length() == 0 && money.equals("")) {
+                    inputFormBinding.tilEtMoney.setError("금액을 입력해주세요.");
+                    return;
+                }
 
                 String date = inputFormBinding.tvDate.getText().toString();
                 String[] dates = date.split("\\.");
@@ -140,9 +145,8 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
                 String time = inputFormBinding.tvTime.getText().toString();
                 String[] times = time.split(":");
 
-                String money = inputFormBinding.etMoney.getText().toString();
-                String method = inputFormBinding.acsMethod.getSelectedItem().toString();
                 String group = inputFormBinding.acsGroup.getSelectedItem().toString();
+                String method = inputFormBinding.acsMethod.getSelectedItem().toString();
                 String spending = inputFormBinding.acsSpending.getSelectedItem().toString();
                 String content = inputFormBinding.etContent.getText().toString();
 
@@ -156,6 +160,10 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
                 //DailyListViewFragment
                 DailyListViewFragment dailyListViewFragment = (DailyListViewFragment) getFragmentManager().getFragments().get(0);
                 dailyListViewFragment.setUserVisibleHint(true);
+
+
+
+
                 getDialog().dismiss();
                 break;
             case R.id.btn_cancel:
