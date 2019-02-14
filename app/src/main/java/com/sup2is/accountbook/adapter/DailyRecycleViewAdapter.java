@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.sup2is.accountbook.R;
 import com.sup2is.accountbook.model.Account;
+import com.sup2is.accountbook.util.CommaFormatter;
 
 import java.util.ArrayList;
 
@@ -55,19 +56,20 @@ public class DailyRecycleViewAdapter extends RecyclerView.Adapter<DailyRecycleVi
         Account account = accounts.get(position);
         if (baseViewHolder instanceof BodyViewHolder) {
 
-            Log.d(TAG , "viewholder type is body");
-            Log.d(TAG , "item day is " + account.getDateBundle().getDay());
             BodyViewHolder bodyViewHolder = (BodyViewHolder) baseViewHolder;
             bodyViewHolder.tv_time.setText(account.getDateBundle().getHour() + ":" + account.getDateBundle().getMinute());
             bodyViewHolder.tv_spending.setText(account.getSpending());
             bodyViewHolder.tv_group.setText(account.getGroup());
-            bodyViewHolder.tv_money.setText(account.getMoney());
+            bodyViewHolder.tv_money.setText(CommaFormatter.comma(Long.parseLong(account.getMoney())) + " 원");
             bodyViewHolder.tv_content.setText(account.getContent());
+            if(account.getMethod().equals("수입")) {
+                bodyViewHolder.tv_money.setTextColor(context.getResources().getColor(R.color.incoming));
+            }else {
+                bodyViewHolder.tv_money.setTextColor(context.getResources().getColor(R.color.spending));
+            }
         }
 
         if (baseViewHolder instanceof HeaderViewHolder) {
-            Log.d(TAG , "viewholder type is header");
-            Log.d(TAG , "item day is " + account.getDateBundle().getDay());
             long incoming = 0;
             long spending = 0;
             int currentDay = Integer.parseInt(account.getDateBundle().getDay());
@@ -88,9 +90,9 @@ public class DailyRecycleViewAdapter extends RecyclerView.Adapter<DailyRecycleVi
             headerViewHolder.tv_day.setText(account.getDateBundle().getDay());
             headerViewHolder.tv_date.setText(account.getDateBundle().getYear().substring(2) +"."+ account.getDateBundle().getMonth());
             headerViewHolder.tv_day_of_week.setText(account.getDateBundle().getDayOfWeek());
-            headerViewHolder.tv_spending_money.setText(spending +"");
-            headerViewHolder.tv_incoming_money.setText(incoming +"");
-            headerViewHolder.tv_total_money.setText(incoming - spending + "");
+            headerViewHolder.tv_spending_money.setText(CommaFormatter.comma(spending) + " 원");
+            headerViewHolder.tv_incoming_money.setText(CommaFormatter.comma(incoming) + " 원");
+            headerViewHolder.tv_total_money.setText(CommaFormatter.comma(incoming - spending));
 
             if((incoming - spending) > 0) {
                 headerViewHolder.tv_total_money.setTextColor(context.getResources().getColor(R.color.incoming));
@@ -100,7 +102,14 @@ public class DailyRecycleViewAdapter extends RecyclerView.Adapter<DailyRecycleVi
             headerViewHolder.tv_time.setText(account.getDateBundle().getHour() + ":" + account.getDateBundle().getMinute());
             headerViewHolder.tv_spending.setText(account.getSpending());
             headerViewHolder.tv_group.setText(account.getGroup());
-            headerViewHolder.tv_money.setText(account.getMoney());
+
+            if(account.getMethod().equals("수입")) {
+                headerViewHolder.tv_money.setTextColor(context.getResources().getColor(R.color.incoming));
+            }else {
+                headerViewHolder.tv_money.setTextColor(context.getResources().getColor(R.color.spending));
+            }
+
+            headerViewHolder.tv_money.setText(CommaFormatter.comma(Long.parseLong(account.getMoney())) + " 원");
             headerViewHolder.tv_content.setText(account.getContent());
         }
     }

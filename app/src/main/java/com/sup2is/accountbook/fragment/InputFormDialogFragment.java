@@ -11,6 +11,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +30,7 @@ import com.sup2is.accountbook.databinding.FragmentInputFormBinding;
 import com.sup2is.accountbook.dialog.CustomDialog;
 import com.sup2is.accountbook.model.Account;
 import com.sup2is.accountbook.model.DateBundle;
+import com.sup2is.accountbook.util.CommaFormatter;
 import com.sup2is.accountbook.util.GlobalDate;
 
 import java.util.ArrayList;
@@ -102,6 +106,7 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
         inputFormBinding.btnCancel.setOnClickListener(this);
         inputFormBinding.btnMore.setOnClickListener(this);
         inputFormBinding.btnOk.setOnClickListener(this);
+        inputFormBinding.etMoney.addTextChangedListener(textWatcher);
 
         return view;
     }
@@ -165,8 +170,7 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
     }
 
     public void addItem () {
-
-        String money = inputFormBinding.etMoney.getText().toString();
+        String money = inputFormBinding.etMoney.getText().toString().replaceAll(",", "");
         String date = inputFormBinding.tvDate.getText().toString();
         String[] dates = date.split("\\.");
 
@@ -225,6 +229,30 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
         }
         return null;
     }
+
+
+    private String result;
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+            if(!TextUtils.isEmpty(charSequence.toString()) && !charSequence.toString().equals(result)){
+                result = CommaFormatter.comma(Long.parseLong(charSequence.toString().replaceAll(",", "")));
+                inputFormBinding.etMoney.setText(result);
+                inputFormBinding.etMoney.setSelection(result.length());
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
 
 
 }

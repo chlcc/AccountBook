@@ -59,7 +59,6 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
     }
 
     public static class Builder{
-
         private String hint;
         private String title;
 
@@ -73,5 +72,4 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
             return this;
         }
     }
-
 }
