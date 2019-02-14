@@ -2,6 +2,8 @@ package com.sup2is.accountbook.model;
 
 public class Account {
 
+
+    private final int idx;
     private final DateBundle dateBundle;
     private final String money;
     private final String method;
@@ -10,7 +12,8 @@ public class Account {
     private final String content;
     private final String type;
 
-    public Account(DateBundle dateBundle, String money, String method, String group, String spending ,String content, String type) {
+    public Account(int idx ,DateBundle dateBundle, String money, String method, String group, String spending ,String content, String type) {
+        this.idx = idx;
         this.dateBundle = dateBundle;
         this.money = money;
         this.method = method;
@@ -22,6 +25,10 @@ public class Account {
 
     public DateBundle getDateBundle() {
         return dateBundle;
+    }
+
+    public int getIdx() {
+        return idx;
     }
 
     public String getMoney() {

@@ -7,6 +7,12 @@
         android:background="@drawable/stroke_listview_border"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/tv_id"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"

@@ -186,7 +186,9 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
         DateBundle dateBundle = new DateBundle(dates[0],dates[1],dates[2],dayOfWeek,times[0],times[1],"0");
 
         String type = dbManager.getItemType(dates[2]);
-        Account account = new Account(dateBundle,money,method,group,spending,content,type);
+        int idx = dbManager.getNextAutoIncrement();
+
+        Account account = new Account(idx,dateBundle,money,method,group,spending,content,type);
         dbManager.insertItem(account);
     }
 

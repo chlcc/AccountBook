@@ -16,7 +16,6 @@ import com.sup2is.accountbook.R;
 import com.sup2is.accountbook.adapter.TabPagerAdapter;
 import com.sup2is.accountbook.application.AccountBookApplication;
 import com.sup2is.accountbook.databinding.ActivityMainBinding;
-import com.sup2is.accountbook.databinding.FragmentDailyListviewBinding;
 import com.sup2is.accountbook.databinding.LayoutActionbarBinding;
 import com.sup2is.accountbook.handler.ActionbarHandler;
 import com.sup2is.accountbook.util.GlobalDate;
@@ -34,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
 
     private LayoutActionbarBinding actionbarBinding;
 
-    private FragmentDailyListviewBinding dailyListviewBinding;
-
     private TabPagerAdapter tabPagerAdapter;
 
     private int tabPosition;
@@ -46,15 +43,15 @@ public class MainActivity extends AppCompatActivity {
 
         application = (AccountBookApplication) getApplication();
         pref = application.getSpm();
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         viewInit();
 
-        if(pref.getString(SharedPreferenceManager.USE_FIRST) == null) {
+        if (pref.getString(SharedPreferenceManager.USE_FIRST) == null) {
             //todo 첫 사용자 사용법 알림
             Toast.makeText(application, "첫사용자입니다", Toast.LENGTH_SHORT).show();
 
             // todo 사용자 알림서 전부 확인 시 다음부터 출력 X
-            pref.putString(SharedPreferenceManager.USE_FIRST,"true");
+            pref.putString(SharedPreferenceManager.USE_FIRST, "true");
         }
 
     }
@@ -75,26 +72,26 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(false);
 
-        ActionBar.LayoutParams params = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,ActionBar.LayoutParams.MATCH_PARENT);
+        ActionBar.LayoutParams params = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT);
         View customView = LayoutInflater.from(this).inflate(R.layout.layout_actionbar, null);
         actionbarBinding = DataBindingUtil.bind(customView);
         actionbarBinding.setHandler(new ActionbarHandler());
         actionBar.setCustomView(customView, params);
 
         Toolbar parent = (Toolbar) customView.getParent();
-        parent.setPadding(0,0,0,0);
-        parent.setContentInsetsAbsolute(0,0);
+        parent.setPadding(0, 0, 0, 0);
+        parent.setContentInsetsAbsolute(0, 0);
 
         actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.actionBar)));
 
         // gnb
-        TabLayout tabLayout =  actionbarBinding.tlGnb;
+        TabLayout tabLayout = actionbarBinding.tlGnb;
         tabLayout.addTab(tabLayout.newTab().setCustomView(R.layout.button_daily_list));
         tabLayout.addTab(tabLayout.newTab().setCustomView(R.layout.button_calendar));
         tabLayout.addTab(tabLayout.newTab().setCustomView(R.layout.button_statistics));
         tabLayout.addTab(tabLayout.newTab().setCustomView(R.layout.button_settings));
 
-        tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
+        tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
 
 
         binding.vpContainer.setOffscreenPageLimit(3);

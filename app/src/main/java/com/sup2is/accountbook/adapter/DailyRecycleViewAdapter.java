@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sup2is.accountbook.R;
 import com.sup2is.accountbook.model.Account;
@@ -39,10 +40,12 @@ public class DailyRecycleViewAdapter extends RecyclerView.Adapter<DailyRecycleVi
         switch (viewType) {
             case 0 :
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_custom_listview_header,parent,false);
+                view.setOnLongClickListener(listener);
                 viewHolder = new HeaderViewHolder(view);
                 break;
             case 1 :
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_custom_listview_body,parent,false);
+                view.setOnLongClickListener(listener);
                 viewHolder = new BodyViewHolder(view);
                 break;
 
@@ -57,6 +60,7 @@ public class DailyRecycleViewAdapter extends RecyclerView.Adapter<DailyRecycleVi
         if (baseViewHolder instanceof BodyViewHolder) {
 
             BodyViewHolder bodyViewHolder = (BodyViewHolder) baseViewHolder;
+            bodyViewHolder.tv_id.setText(account.getIdx() + "");
             bodyViewHolder.tv_time.setText(account.getDateBundle().getHour() + ":" + account.getDateBundle().getMinute());
             bodyViewHolder.tv_spending.setText(account.getSpending());
             bodyViewHolder.tv_group.setText(account.getGroup());
@@ -87,6 +91,7 @@ public class DailyRecycleViewAdapter extends RecyclerView.Adapter<DailyRecycleVi
             }
 
             HeaderViewHolder headerViewHolder = (HeaderViewHolder) baseViewHolder;
+            headerViewHolder.tv_id.setText(account.getIdx() + "");
             headerViewHolder.tv_day.setText(account.getDateBundle().getDay());
             headerViewHolder.tv_date.setText(account.getDateBundle().getYear().substring(2) +"."+ account.getDateBundle().getMonth());
             headerViewHolder.tv_day_of_week.setText(account.getDateBundle().getDayOfWeek());
@@ -132,6 +137,7 @@ public class DailyRecycleViewAdapter extends RecyclerView.Adapter<DailyRecycleVi
 
     class HeaderViewHolder extends  BaseViewHolder {
 
+        private TextView tv_id;
         private TextView tv_day;
         private TextView tv_date;
         private TextView tv_day_of_week;
@@ -144,9 +150,9 @@ public class DailyRecycleViewAdapter extends RecyclerView.Adapter<DailyRecycleVi
         private TextView tv_money;
         private TextView tv_content;
 
-
         public HeaderViewHolder(@NonNull View itemView) {
             super(itemView);
+            this.tv_id = itemView.findViewById(R.id.tv_id);
             this.tv_day = itemView.findViewById(R.id.tv_day);
             this.tv_date = itemView.findViewById(R.id.tv_date);
             this.tv_day_of_week = itemView.findViewById(R.id.tv_day_of_week);
@@ -163,6 +169,7 @@ public class DailyRecycleViewAdapter extends RecyclerView.Adapter<DailyRecycleVi
 
     class BodyViewHolder extends  BaseViewHolder {
 
+        private TextView tv_id;
         private TextView tv_time;
         private TextView tv_spending;
         private TextView tv_group;
@@ -171,6 +178,7 @@ public class DailyRecycleViewAdapter extends RecyclerView.Adapter<DailyRecycleVi
 
         public BodyViewHolder(@NonNull View itemView) {
             super(itemView);
+            this.tv_id = itemView.findViewById(R.id.tv_id);
             this.tv_time = itemView.findViewById(R.id.tv_time);
             this.tv_spending = itemView.findViewById(R.id.tv_spending);
             this.tv_group = itemView.findViewById(R.id.tv_group);
@@ -184,5 +192,16 @@ public class DailyRecycleViewAdapter extends RecyclerView.Adapter<DailyRecycleVi
         this.accounts = newList;
         this.notifyDataSetChanged();
     }
+
+    private final View.OnLongClickListener listener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            TextView tv = v.findViewById(R.id.tv_id);
+            Toast.makeText(context, "idx = " + tv.getText(), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+    };
+
+
 }
 

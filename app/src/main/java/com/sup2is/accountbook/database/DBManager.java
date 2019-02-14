@@ -26,7 +26,7 @@ public class DBManager {
     }
 
     public void insertItem(Account item) {
-        String sql = "INSERT INTO " + DBHelper.TBL_NAME + " VALUES ("
+        String sql = "INSERT INTO " + DBHelper.TBL_ACCOUNT + " VALUES ("
                 + "NULL" + ","
                 + "'" +item.getDateBundle().getYear()+ "'" + ","
                 + "'" +item.getDateBundle().getMonth()+ "'" + ","
@@ -48,7 +48,7 @@ public class DBManager {
 
     public ArrayList<Account> selectByDate(DateBundle bundle) {
 
-        String sql = "SELECT * FROM " + DBHelper.TBL_NAME + " WHERE "
+        String sql = "SELECT * FROM " + DBHelper.TBL_ACCOUNT + " WHERE "
                 + "year = " + "'" + bundle.getYear() + "' " + "AND "
                 + "month = " + "'"+ bundle.getMonth() + "' "
                 + "ORDER BY CAST(day AS REAL) DESC";
@@ -57,10 +57,10 @@ public class DBManager {
         results.moveToFirst();
         
         ArrayList<Account> accounts = new ArrayList<>();
-        DateBundle temp;
+        DateBundle dateBundle;
 
         while (!results.isAfterLast()) {
-            temp = new DateBundle(
+            dateBundle = new DateBundle(
                     results.getString(results.getColumnIndex("year")),
                     results.getString(results.getColumnIndex("month")),
                     results.getString(results.getColumnIndex("day")),
@@ -70,13 +70,16 @@ public class DBManager {
                     results.getString(results.getColumnIndex("seconds"))
                     );
 
-            accounts.add(new Account(temp,
+            accounts.add(new Account(
+                    results.getInt(results.getColumnIndex("idx"))
+                    ,dateBundle,
                     results.getString(results.getColumnIndex("money")),
                     results.getString(results.getColumnIndex("method")),
                     results.getString(results.getColumnIndex("class")),
                     results.getString(results.getColumnIndex("spending")),
                     results.getString(results.getColumnIndex("content")),
-                    results.getString(results.getColumnIndex("type"))));
+                    results.getString(results.getColumnIndex("type")))
+            );
             results.moveToNext();
         }
         results.close();
@@ -84,13 +87,16 @@ public class DBManager {
     }
 
     public String getItemType(String day) {
-//        String sql = "SELECT EXISTS  FROM " + DBHelper.TBL_NAME + " WHERE "
-//                + "day = " + "'"+ day + "'";
-
-        String sql = "SELECT EXISTS ( SELECT * FROM " + DBHelper.TBL_NAME + " WHERE " + "day = " + "'" + day +"')";
-
+        String sql = "SELECT EXISTS ( SELECT * FROM " + DBHelper.TBL_ACCOUNT + " WHERE " + "day = " + "'" + day +"')";
         Cursor results = db.rawQuery(sql,null);
         results.moveToFirst();
         return results.getString(0);
+    }
+
+    public int getNextAutoIncrement() {
+        String sql = "SELECT * FROM SQLITE_SEQUENCE";
+        Cursor results = db.rawQuery(sql,null);
+        results.moveToFirst();
+        return results.getInt(results.getColumnIndex("seq"));
     }
 }
