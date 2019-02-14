@@ -202,6 +202,7 @@
                     android:inputType="none"
                     android:textColor="@color/black"
                     android:textColorHint="@color/actionBar"
+                    android:singleLine="true"
                     android:theme="@style/CustomTextAppearance" />
             </android.support.design.widget.TextInputLayout>
 

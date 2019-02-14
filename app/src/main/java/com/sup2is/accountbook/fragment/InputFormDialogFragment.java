@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,8 +86,6 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
         groupAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         inputFormBinding.acsGroup.setAdapter(groupAdapter);
 
-
-
         //단순 input은 global date를 사용하면 안됨
 
         Calendar calendar = Calendar.getInstance();
@@ -133,47 +132,61 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
                 timePickerDialog.show();
                 break;
             case R.id.btn_ok:
-                String money = inputFormBinding.etMoney.getText().toString();
-                if(money.length() == 0 && money.equals("")) {
+                if(inputFormBinding.etMoney.getText().toString().length() == 0 && inputFormBinding.etMoney.getText().toString().equals("")) {
                     inputFormBinding.tilEtMoney.setError("금액을 입력해주세요.");
                     return;
                 }
-
-                String date = inputFormBinding.tvDate.getText().toString();
-                String[] dates = date.split("\\.");
-
-                String time = inputFormBinding.tvTime.getText().toString();
-                String[] times = time.split(":");
-
-                String group = inputFormBinding.acsGroup.getSelectedItem().toString();
-                String method = inputFormBinding.acsMethod.getSelectedItem().toString();
-                String spending = inputFormBinding.acsSpending.getSelectedItem().toString();
-                String content = inputFormBinding.etContent.getText().toString();
-
-                String dayOfWeek = getDayOfWeek(dates[0],dates[1],dates[2]);
-                DateBundle dateBundle = new DateBundle(dates[0],dates[1],dates[2],dayOfWeek,times[0],times[1],"0");
-
-                String type = dbManager.getItemType(dates[2]);
-                Account account = new Account(dateBundle,money,method,group,spending,content,type);
-                dbManager.insertItem(account);
-
-                //DailyListViewFragment
-                DailyListViewFragment dailyListViewFragment = (DailyListViewFragment) getFragmentManager().getFragments().get(0);
-                dailyListViewFragment.setUserVisibleHint(true);
-
-
-
-
+                addItem();
+                refreshDailyFragment();
                 getDialog().dismiss();
                 break;
             case R.id.btn_cancel:
                 getDialog().dismiss();
                 break;
             case R.id.btn_more:
+                if(inputFormBinding.etMoney.getText().toString().length() == 0 && inputFormBinding.etMoney.getText().toString().equals("")) {
+                    inputFormBinding.tilEtMoney.setError("금액을 입력해주세요.");
+                    return;
+                }
+                addItem();
+                refreshDailyFragment();
+                getDialog().dismiss();
+                FragmentManager fm = getFragmentManager();
+                InputFormDialogFragment inputFormDialogFragment = new InputFormDialogFragment();
+                inputFormDialogFragment.show(fm,"input");
                 break;
         }
 
     }
+
+    private void refreshDailyFragment() {
+        DailyListViewFragment dailyListViewFragment = (DailyListViewFragment) getFragmentManager().getFragments().get(0);
+        dailyListViewFragment.setUserVisibleHint(true);
+    }
+
+    public void addItem () {
+
+        String money = inputFormBinding.etMoney.getText().toString();
+        String date = inputFormBinding.tvDate.getText().toString();
+        String[] dates = date.split("\\.");
+
+        String time = inputFormBinding.tvTime.getText().toString();
+        String[] times = time.split(":");
+
+        String group = inputFormBinding.acsGroup.getSelectedItem().toString();
+        String method = inputFormBinding.acsMethod.getSelectedItem().toString();
+        String spending = inputFormBinding.acsSpending.getSelectedItem().toString();
+        String content = inputFormBinding.etContent.getText().toString();
+
+        String dayOfWeek = getDayOfWeek(dates[0],dates[1],dates[2]);
+        DateBundle dateBundle = new DateBundle(dates[0],dates[1],dates[2],dayOfWeek,times[0],times[1],"0");
+
+        String type = dbManager.getItemType(dates[2]);
+        Account account = new Account(dateBundle,money,method,group,spending,content,type);
+        dbManager.insertItem(account);
+    }
+
+
 
     private class TimePickerListener implements TimePickerDialog.OnTimeSetListener{
 

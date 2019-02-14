@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/stroke_listview_border"
@@ -31,7 +31,6 @@
             <LinearLayout
                 android:layout_width="35dp"
                 android:layout_height="match_parent"
-                android:background="@drawable/stroke_listview_border"
                 android:orientation="vertical"
                 android:padding="1dp">
 
@@ -50,15 +49,15 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="금"
                     android:textColor="#000"
-                    android:textSize="10dp" />
+                    android:textSize="15dp" />
             </LinearLayout>
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/stroke_listview_border"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -73,23 +72,31 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="@dimen/custom_listview_text_wrapper_layout_width"
                             android:layout_height="match_parent"
-                            android:layout_marginLeft="@dimen/custom_listview_tv_default_margin_left"
                             android:gravity="center"
-                            android:text="@string/incoming"
-                            android:textColor="@color/black"
-                            android:textSize="10dp" />
+                            >
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/custom_listview_tv_default_margin_left"
+                                android:gravity="center"
+                                android:text="@string/incoming"
+                                android:background="@drawable/rounded_text_bg"
+                                android:textSize="10dp" />
+
+                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/tv_incoming_money"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="@dimen/custom_listview_tv_default_margin_left"
+                            android:layout_marginRight="@dimen/custom_listview_tv_default_margin_right"
                             android:gravity="center_vertical|right"
                             android:textColor="@color/incoming"
-                            android:textSize="9dp" />
+                            android:textSize="11dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -97,23 +104,31 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="@dimen/custom_listview_text_wrapper_layout_width"
                             android:layout_height="match_parent"
-                            android:layout_marginLeft="@dimen/custom_listview_tv_default_margin_left"
                             android:gravity="center"
-                            android:text="@string/spending"
-                            android:textColor="@color/black"
-                            android:textSize="10dp" />
+                            >
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/custom_listview_tv_default_margin_left"
+                                android:gravity="center"
+                                android:text="@string/spending"
+                                android:background="@drawable/rounded_text_bg"
+                                android:textSize="10dp" />
+
+                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/tv_spending_money"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="@dimen/custom_listview_tv_default_margin_left"
+                            android:layout_marginRight="@dimen/custom_listview_tv_default_margin_right"
                             android:gravity="center_vertical|right"
                             android:textColor="@color/spending"
-                            android:textSize="9dp" />
+                            android:textSize="11dp" />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -130,23 +145,31 @@
                     android:layout_height="0dp"
                     android:layout_weight="1">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="@dimen/custom_listview_text_wrapper_layout_width"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/custom_listview_tv_default_margin_left"
                         android:gravity="center"
-                        android:text="@string/total"
-                        android:textColor="#000"
-                        android:textSize="10dp" />
+                        >
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/custom_listview_tv_default_margin_left"
+                            android:gravity="center"
+                            android:text="@string/total"
+                            android:background="@drawable/rounded_text_bg"
+                            android:textSize="10dp" />
+                    </LinearLayout>
+
 
                     <TextView
                         android:id="@+id/tv_total_money"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/custom_listview_tv_default_margin_left"
+                        android:layout_marginRight="@dimen/custom_listview_tv_default_margin_right"
                         android:gravity="center_vertical|right"
                         android:textColor="@color/black"
-                        android:textSize="9dp" />
+                        android:textSize="11dp" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -162,7 +185,6 @@
                 android:id="@+id/tv_time"
                 android:layout_width="35dp"
                 android:layout_height="match_parent"
-                android:background="@drawable/stroke_listview_border"
                 android:gravity="center"
                 android:textColor="@color/black"
                 android:textSize="12dp" />
@@ -174,25 +196,39 @@
                 android:orientation="vertical"
                 android:padding="1dp">
 
-                <TextView
-                    android:id="@+id/tv_spending"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="카드"
-                    android:textColor="@color/black"
-                    android:textSize="10dp" />
+                    android:gravity="center_vertical">
 
-                <TextView
-                    android:id="@+id/tv_group"
+                    <TextView
+                        android:id="@+id/tv_group"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_text_bg"
+                        android:gravity="center"
+                        android:textSize="10dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="식비"
-                    android:textColor="@color/black"
-                    android:textSize="10dp" />
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/tv_spending"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="0.5dp"
+                        android:background="@drawable/rounded_text_bg"
+                        android:gravity="center"
+                        android:textSize="10dp" />
+                </LinearLayout>
+
+
             </LinearLayout>
 
 
@@ -201,18 +237,17 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/stroke_listview_border"
                 android:orientation="vertical"
-
                 >
 
                 <TextView
                     android:id="@+id/tv_money"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:layout_marginRight="@dimen/custom_listview_tv_default_margin_right"
                     android:layout_weight="1"
                     android:gravity="center_vertical|right"
-                    android:text="99,900"
                     android:textColor="@color/black"
-                    android:textSize="9dp" />
+                    android:textSize="11dp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -227,7 +262,6 @@
                     android:layout_marginLeft="@dimen/custom_listview_tv_default_margin_left"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:text="회사사람들이랑 밥먹음"
                     android:textColor="@color/black"
                     android:textSize="10dp" />
             </LinearLayout>

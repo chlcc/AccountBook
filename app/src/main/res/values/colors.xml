@@ -17,10 +17,10 @@
     <color name="whiteSmoke">#f5f5f5</color>
     <color name="spending">#e71837</color>
     <color name="incoming">#0e4bef</color>
-    <color name="darkGray">#bebebe</color>
+    <color name="darkGray">#6f6a68</color>
     <color name="white">#fff</color>
     <color name="transparency_20">#CCffffff</color>
-
+    <color name="lightGray">#b8bfc2</color>
 
 
 </resources>
