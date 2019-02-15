@@ -3,6 +3,7 @@ package com.sup2is.accountbook.database;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 
 import com.sup2is.accountbook.model.Account;
 import com.sup2is.accountbook.model.DateBundle;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 
 public class DBManager {
 
+    private static final String TAG = "###" + DBHelper.class.getSimpleName() + " : ";
     private final DBHelper dbHelper;
 
     private final SQLiteDatabase db;
@@ -42,16 +44,14 @@ public class DBManager {
                 + "'" +item.getContent()+ "'" + ","
                 + "'" +item.getType()+ "'" + ")";
         db.execSQL(sql);
-    }
-
-
+}
 
     public ArrayList<Account> selectByDate(DateBundle bundle) {
 
         String sql = "SELECT * FROM " + DBHelper.TBL_ACCOUNT + " WHERE "
                 + "year = " + "'" + bundle.getYear() + "' " + "AND "
                 + "month = " + "'"+ bundle.getMonth() + "' "
-                + "ORDER BY CAST(day AS REAL) DESC";
+                + "ORDER BY CAST(day AS INTEGER) DESC , CAST(hour AS INTEGER) , CAST(minute AS INTEGER) ASC";
 
         Cursor results = db.rawQuery(sql,null);
         results.moveToFirst();
@@ -86,17 +86,136 @@ public class DBManager {
         return accounts;
     }
 
-    public String getItemType(String day) {
-        String sql = "SELECT EXISTS ( SELECT * FROM " + DBHelper.TBL_ACCOUNT + " WHERE " + "day = " + "'" + day +"')";
+
+    public String getItemType(DateBundle dateBundle) {
+        //exist = 1 or not = 0
+        String sql = "SELECT EXISTS ( SELECT * FROM " + DBHelper.TBL_ACCOUNT + " WHERE " + "day = " + "'" + dateBundle.getDay()+"')";
         Cursor results = db.rawQuery(sql,null);
         results.moveToFirst();
+
+        if(results.getInt(0) == 0) {
+            //not
+            return results.getString(0);
+        }
+
+        //exist ...
+        Account account = selectByDateToFirstItem(dateBundle);
+        if(Integer.parseInt(account.getDateBundle().getMinute()) > Integer.parseInt(dateBundle.getMinute())){
+            //만약 db에 있는 가장 최신데이터보다 minute값이 빠르면 type들 초기화 후 return 0 (header)
+            sql = "UPDATE " + DBHelper.TBL_ACCOUNT + " SET type = '" + 1 + "' WHERE "
+                    + "year = " + "'" + dateBundle.getYear() + "' " + "AND "
+                    + "month = " + "'"+ dateBundle.getMonth() + "' " + "AND "
+                    + "day = " + "'"+ dateBundle.getDay() + "' ";
+            db.execSQL(sql);
+            return "0";
+        }
+
         return results.getString(0);
+
     }
 
     public int getNextAutoIncrement() {
         String sql = "SELECT * FROM SQLITE_SEQUENCE";
         Cursor results = db.rawQuery(sql,null);
-        results.moveToFirst();
-        return results.getInt(results.getColumnIndex("seq"));
+        if(results.moveToFirst()){
+            return results.getInt(results.getColumnIndex("seq"));
+        }
+        return 0;
     }
+
+    public void modifyItem(Account account) {
+        String sql = "UPDATE " + DBHelper.TBL_ACCOUNT + " SET "
+                + "year = " + "'" + account.getDateBundle().getYear() + "' ,"
+                + "month = " + "'" + account.getDateBundle().getMonth() + "' ,"
+                + "day = " + "'" + account.getDateBundle().getDay() + "' ,"
+                + "day_of_week = " + "'" + account.getDateBundle().getDayOfWeek() + "' ,"
+                + "hour = " + "'" + account.getDateBundle().getHour() + "' ,"
+                + "minute = " + "'" + account.getDateBundle().getMinute() + "' ,"
+                + "seconds = " + "'" + account.getDateBundle().getSeconds() + "' ,"
+                + "money = " + "'" + account.getMoney() + "' ,"
+                + "method = " + "'" + account.getMethod() + "' ,"
+                + "class = " + "'" + account.getGroup() + "' ,"
+                + "spending = " + "'" + account.getSpending() + "' ,"
+                + "content = " + "'" + account.getContent() + "' ,"
+                + "type = " + "'" + account.getType() + "'"
+                + "WHERE idx =" + "'" + account.getIdx() + "'";
+        db.execSQL(sql);
+    }
+
+    private Account selectByDateToFirstItem(DateBundle bundle) {
+        String sql = "SELECT * FROM " + DBHelper.TBL_ACCOUNT + " WHERE "
+                + "year = " + "'" + bundle.getYear() + "' " + "AND "
+                + "month = " + "'"+ bundle.getMonth() + "' " + "AND "
+                + "day = " + "'"+ bundle.getDay() + "' "
+                + "ORDER BY CAST(hour AS INTEGER) , CAST(minute AS INTEGER) ASC";
+
+        Cursor results = db.rawQuery(sql,null);
+        if(results.moveToFirst()) {
+            DateBundle dateBundle = new DateBundle(
+                    results.getString(results.getColumnIndex("year")),
+                    results.getString(results.getColumnIndex("month")),
+                    results.getString(results.getColumnIndex("day")),
+                    results.getString(results.getColumnIndex("day_of_week")),
+                    results.getString(results.getColumnIndex("hour")),
+                    results.getString(results.getColumnIndex("minute")),
+                    results.getString(results.getColumnIndex("seconds"))
+            );
+            return new Account(
+                    results.getInt(results.getColumnIndex("idx"))
+                    , dateBundle,
+                    results.getString(results.getColumnIndex("money")),
+                    results.getString(results.getColumnIndex("method")),
+                    results.getString(results.getColumnIndex("class")),
+                    results.getString(results.getColumnIndex("spending")),
+                    results.getString(results.getColumnIndex("content")),
+                    results.getString(results.getColumnIndex("type")));
+        }
+        return null;
+    }
+
+    public void reorderingData(DateBundle bundle) {
+        Account item = selectByDateToFirstItem(bundle);
+        if(item != null) {
+            //만약 날짜가 변경된다면 객체가 있던 날짜중 가장 첫번째 값의 type은 0이 되어야함 (0번 데이터 변경시)
+            String sql = "UPDATE " + DBHelper.TBL_ACCOUNT + " SET type = '" + 0 +"' WHERE idx = '" + item.getIdx() + "'";
+            db.execSQL(sql);
+        }
+    }
+
+    public void deleteItem(int idx) {
+        String sql = "DELETE FROM " + DBHelper.TBL_ACCOUNT + " WHERE idx =" + "'" + idx + "'";
+        db.execSQL(sql);
+    }
+
+    public Account selectByIdx(int idx) {
+        String sql = "SELECT * FROM " + DBHelper.TBL_ACCOUNT + " WHERE idx = " + "'" + idx + "' ";
+        Cursor results = db.rawQuery(sql,null);
+        results.moveToFirst();
+        DateBundle dateBundle = new DateBundle(
+                results.getString(results.getColumnIndex("year")),
+                results.getString(results.getColumnIndex("month")),
+                results.getString(results.getColumnIndex("day")),
+                results.getString(results.getColumnIndex("day_of_week")),
+                results.getString(results.getColumnIndex("hour")),
+                results.getString(results.getColumnIndex("minute")),
+                results.getString(results.getColumnIndex("seconds"))
+        );
+        return new Account(
+                results.getInt(results.getColumnIndex("idx"))
+                ,dateBundle,
+                results.getString(results.getColumnIndex("money")),
+                results.getString(results.getColumnIndex("method")),
+                results.getString(results.getColumnIndex("class")),
+                results.getString(results.getColumnIndex("spending")),
+                results.getString(results.getColumnIndex("content")),
+                results.getString(results.getColumnIndex("type")));
+    }
+
+    public void temp() {
+//        String sql = "UPDATE " + DBHelper.TBL_ACCOUNT + " SET type = 0 WHERE + idx = 13";
+//        db.execSQL(sql);
+
+    }
+
+
 }

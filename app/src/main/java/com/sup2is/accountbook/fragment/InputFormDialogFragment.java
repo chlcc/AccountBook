@@ -1,7 +1,6 @@
 package com.sup2is.accountbook.fragment;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
@@ -31,16 +30,12 @@ import com.sup2is.accountbook.dialog.CustomDialog;
 import com.sup2is.accountbook.model.Account;
 import com.sup2is.accountbook.model.DateBundle;
 import com.sup2is.accountbook.util.CommaFormatter;
-import com.sup2is.accountbook.util.GlobalDate;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 public class InputFormDialogFragment extends DialogFragment implements View.OnClickListener {
-
-
-    private final GlobalDate globalDate = GlobalDate.getInstance();
 
     private FragmentInputFormBinding inputFormBinding;
 
@@ -52,9 +47,13 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
 
     private AccountBookApplication application;
 
+    private int idx;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        Bundle bundle = getArguments();
 
         Window window = getDialog().getWindow();
         window.setGravity(Gravity.CENTER| Gravity.BOTTOM);
@@ -66,6 +65,7 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
         application = (AccountBookApplication) getActivity().getApplication();
         dbManager = application.getDbManager();
 
+        //todo method, spending, group은 전부 category db에서 불러오도록
         ArrayList<String> methodList = new ArrayList<>();
         methodList.add("지출");
         methodList.add("수입");
@@ -91,13 +91,32 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
         inputFormBinding.acsGroup.setAdapter(groupAdapter);
 
         //단순 input은 global date를 사용하면 안됨
-
         Calendar calendar = Calendar.getInstance();
         inputFormBinding.tvDate.setText(calendar.get(Calendar.YEAR) + "." + (calendar.get(Calendar.MONTH) + 1) + "." + calendar.get(Calendar.DATE));
         inputFormBinding.tvTime.setText(String.format("%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)));
 
         datePickerDialog = new DatePickerDialog(getContext(),R.style.CustomDatePicker,new DatePickerListener(),calendar.get(Calendar.YEAR),(calendar.get(Calendar.MONTH)),calendar.get(Calendar.DATE));
         timePickerDialog = new TimePickerDialog(getContext(),R.style.CustomTimePicker,new TimePickerListener(),calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false);
+
+        //todo 만약 bundle 값이 있으면 idx로 db에 검색 후 저장된 값으로 스피너, 달력 , 시계 세팅
+        if(bundle != null) {
+            idx = bundle.getInt("idx");
+            Account account = dbManager.selectByIdx(idx);
+            inputFormBinding.acsMethod.setSelection(methodList.indexOf(account.getMethod()));
+
+            inputFormBinding.tvTitle.setText(getResources().getString(R.string.modify));
+            inputFormBinding.acsGroup.setSelection(groupList.indexOf(account.getGroup()));
+            inputFormBinding.acsSpending.setSelection(spendingList.indexOf(account.getSpending()));
+            inputFormBinding.etMoney.setText(CommaFormatter.comma(Long.parseLong(account.getMoney())));
+            inputFormBinding.etContent.setText(account.getContent());
+            datePickerDialog = new DatePickerDialog(getContext(),R.style.CustomDatePicker,new DatePickerListener(),Integer.parseInt(account.getDateBundle().getYear()),Integer.parseInt(account.getDateBundle().getMonth()) -1,Integer.parseInt(account.getDateBundle().getDay()));
+            timePickerDialog = new TimePickerDialog(getContext(),R.style.CustomTimePicker,new TimePickerListener(),Integer.parseInt(account.getDateBundle().getHour()),Integer.parseInt(account.getDateBundle().getDay()),false);
+            inputFormBinding.tvDate.setText(account.getDateBundle().getYear() + "." + account.getDateBundle().getMonth()+ "." + account.getDateBundle().getDay());
+            inputFormBinding.tvTime.setText(account.getDateBundle().getHour() + ":" + account.getDateBundle().getMinute());
+            inputFormBinding.llEditBtnWrapper.setVisibility(View.VISIBLE);
+            inputFormBinding.llInputBtnWrapper.setVisibility(View.GONE);
+            inputFormBinding.tvId.setText(idx + "");
+        }
 
         inputFormBinding.ibAddGroup.setOnClickListener(this);
         inputFormBinding.ibAddSpending.setOnClickListener(this);
@@ -106,8 +125,9 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
         inputFormBinding.btnCancel.setOnClickListener(this);
         inputFormBinding.btnMore.setOnClickListener(this);
         inputFormBinding.btnOk.setOnClickListener(this);
+        inputFormBinding.btnModify.setOnClickListener(this);
+        inputFormBinding.btnDelete.setOnClickListener(this);
         inputFormBinding.etMoney.addTextChangedListener(textWatcher);
-
         return view;
     }
 
@@ -160,8 +180,22 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
                 InputFormDialogFragment inputFormDialogFragment = new InputFormDialogFragment();
                 inputFormDialogFragment.show(fm,"input");
                 break;
-        }
+            case  R.id.btn_modify:
+                if(inputFormBinding.etMoney.getText().toString().length() == 0 && inputFormBinding.etMoney.getText().toString().equals("")) {
+                    inputFormBinding.tilEtMoney.setError("금액을 입력해주세요.");
+                    return;
+                }
+                modifyItem(Integer.parseInt(inputFormBinding.tvId.getText().toString()));
+                refreshDailyFragment();
+                getDialog().dismiss();
+                break;
+            case  R.id.btn_delete:
+                deleteItem(Integer.parseInt(inputFormBinding.tvId.getText().toString()));
+                refreshDailyFragment();
+                getDialog().dismiss();
+                break;
 
+        }
     }
 
     private void refreshDailyFragment() {
@@ -169,30 +203,48 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
         dailyListViewFragment.setUserVisibleHint(true);
     }
 
-    public void addItem () {
+    private void addItem () {
         String money = inputFormBinding.etMoney.getText().toString().replaceAll(",", "");
         String date = inputFormBinding.tvDate.getText().toString();
         String[] dates = date.split("\\.");
-
         String time = inputFormBinding.tvTime.getText().toString();
         String[] times = time.split(":");
-
         String group = inputFormBinding.acsGroup.getSelectedItem().toString();
         String method = inputFormBinding.acsMethod.getSelectedItem().toString();
         String spending = inputFormBinding.acsSpending.getSelectedItem().toString();
         String content = inputFormBinding.etContent.getText().toString();
-
-        String dayOfWeek = getDayOfWeek(dates[0],dates[1],dates[2]);
+        String dayOfWeek = getDayOfWeek(dates[0],dates[1],dates[2]); // year, month, day
         DateBundle dateBundle = new DateBundle(dates[0],dates[1],dates[2],dayOfWeek,times[0],times[1],"0");
-
-        String type = dbManager.getItemType(dates[2]);
+        String type = dbManager.getItemType(dateBundle);  // day, hour, minute
         int idx = dbManager.getNextAutoIncrement();
-
         Account account = new Account(idx,dateBundle,money,method,group,spending,content,type);
         dbManager.insertItem(account);
     }
 
+    private void modifyItem(int idx) {
+        String money = inputFormBinding.etMoney.getText().toString().replaceAll(",", "");
+        String date = inputFormBinding.tvDate.getText().toString();
+        String[] dates = date.split("\\.");
+        String time = inputFormBinding.tvTime.getText().toString();
+        String[] times = time.split(":");
+        String group = inputFormBinding.acsGroup.getSelectedItem().toString();
+        String method = inputFormBinding.acsMethod.getSelectedItem().toString();
+        String spending = inputFormBinding.acsSpending.getSelectedItem().toString();
+        String content = inputFormBinding.etContent.getText().toString();
+        String dayOfWeek = getDayOfWeek(dates[0],dates[1],dates[2]);
+        DateBundle dateBundle = new DateBundle(dates[0],dates[1],dates[2],dayOfWeek,times[0],times[1],"0");
+        String type = dbManager.getItemType(dateBundle);
+        Account newAccount = new Account(idx,dateBundle,money,method,group,spending,content,type);
+        Account oldAccount = dbManager.selectByIdx(idx);
+        dbManager.modifyItem(newAccount);
+        dbManager.reorderingData(oldAccount.getDateBundle());
+    }
 
+    private void deleteItem(int idx) {
+        Account oldAccount = dbManager.selectByIdx(idx);
+        dbManager.deleteItem(idx);
+        dbManager.reorderingData(oldAccount.getDateBundle());
+    }
 
     private class TimePickerListener implements TimePickerDialog.OnTimeSetListener{
 
@@ -232,12 +284,10 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
         return null;
     }
 
-
     private String result;
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
         }
 
         @Override
@@ -251,7 +301,6 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
 
         @Override
         public void afterTextChanged(Editable s) {
-
         }
     };
 

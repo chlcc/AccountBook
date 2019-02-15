@@ -1,16 +1,18 @@
 package com.sup2is.accountbook.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sup2is.accountbook.R;
+import com.sup2is.accountbook.activity.MainActivity;
+import com.sup2is.accountbook.fragment.InputFormDialogFragment;
 import com.sup2is.accountbook.model.Account;
 import com.sup2is.accountbook.util.CommaFormatter;
 
@@ -97,7 +99,7 @@ public class DailyRecycleViewAdapter extends RecyclerView.Adapter<DailyRecycleVi
             headerViewHolder.tv_day_of_week.setText(account.getDateBundle().getDayOfWeek());
             headerViewHolder.tv_spending_money.setText(CommaFormatter.comma(spending) + " 원");
             headerViewHolder.tv_incoming_money.setText(CommaFormatter.comma(incoming) + " 원");
-            headerViewHolder.tv_total_money.setText(CommaFormatter.comma(incoming - spending));
+            headerViewHolder.tv_total_money.setText(CommaFormatter.comma(incoming - spending) + " 원");
 
             if((incoming - spending) > 0) {
                 headerViewHolder.tv_total_money.setTextColor(context.getResources().getColor(R.color.incoming));
@@ -196,12 +198,16 @@ public class DailyRecycleViewAdapter extends RecyclerView.Adapter<DailyRecycleVi
     private final View.OnLongClickListener listener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
-            TextView tv = v.findViewById(R.id.tv_id);
-            Toast.makeText(context, "idx = " + tv.getText(), Toast.LENGTH_SHORT).show();
+            int idx = Integer.parseInt(((TextView)v.findViewById(R.id.tv_id)).getText().toString());
+            FragmentManager fm = ((MainActivity)context).getSupportFragmentManager();
+            InputFormDialogFragment inputFormDialogFragment = new InputFormDialogFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt("idx",idx);
+            inputFormDialogFragment.setArguments(bundle);
+            inputFormDialogFragment.show(fm,"edit");
             return true;
         }
     };
-
 
 }
 

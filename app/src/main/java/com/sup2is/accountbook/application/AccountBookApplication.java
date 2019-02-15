@@ -17,6 +17,7 @@ public class AccountBookApplication extends Application {
         super.onCreate();
         spm = SharedPreferenceManager.getInstance(this);
         dbManager = new DBManager(getApplicationContext(),1);
+        dbManager.temp();
     }
 
     public SharedPreferenceManager getSpm() {
