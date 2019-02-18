@@ -1,6 +1,5 @@
 package com.sup2is.accountbook.fragment;
 
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,7 +15,11 @@ import android.widget.TextView;
 
 import com.sup2is.accountbook.R;
 import com.sup2is.accountbook.adapter.CalendarGridAdapter;
+import com.sup2is.accountbook.application.AccountBookApplication;
+import com.sup2is.accountbook.database.DBManager;
 import com.sup2is.accountbook.databinding.FragmentCalendarBinding;
+import com.sup2is.accountbook.model.Account;
+import com.sup2is.accountbook.model.DateBundle;
 import com.sup2is.accountbook.util.GlobalDate;
 
 import java.util.ArrayList;
@@ -29,59 +32,29 @@ public class CalendarFragment extends Fragment {
     private static final int GRID_COUNT = 42;
 
     private FragmentCalendarBinding calendarBinding;
-
     private GlobalDate globalDate = GlobalDate.getInstance();
-
-    private final ArrayList<String> dayList = new ArrayList<>();
-
+    private ArrayList<String> dayList = new ArrayList<>();
     private CalendarGridAdapter calendarGridAdapter;
-
     private final String[] DAY_OF_WEEK = {"SUN","MON","TUE","WED","THU","FRI","SAT"};
-
-
-    @Override
-    public void onAttach(Context context) {
-        Log.d(TAG,"onAttach call");
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.d(TAG,"onCreate call");
-        super.onCreate(savedInstanceState);
-    }
-
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        Log.d(TAG,"onActivityCreated call");
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onStart() {
-        Log.d(TAG,"onStart call");
-        super.onStart();
-    }
-
-
-    @Override
-    public void onResume() {
-        Log.d(TAG,"onResume call");
-        super.onResume();
-    }
+    private ArrayList<Account> accounts;
+    private AccountBookApplication application;
+    private DBManager dbManager;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        Log.d(TAG,"onCreateView call");
         View view = inflater.inflate(R.layout.fragment_calendar,container,false);
         calendarBinding = DataBindingUtil.bind(view);
 
-        setCalendarDate();
+        application = (AccountBookApplication) getActivity().getApplication();
+        dbManager = application.getDbManager();
 
-        calendarGridAdapter = new CalendarGridAdapter(getContext(),dayList);
+        DateBundle dateBundle = new DateBundle(String.valueOf(globalDate.getYear()),String.valueOf(globalDate.getMonth()),String.valueOf(globalDate.getDay()),null,null,null,null);
+        accounts = dbManager.selectByDate(dateBundle);
+
+        dayList = getCurrentDayList();
+
+        calendarGridAdapter = new CalendarGridAdapter(getContext(),dayList,accounts);
         calendarBinding.gvCalendar.setAdapter(calendarGridAdapter);
         calendarBinding.gvCalendar.setVerticalScrollBarEnabled(false);
 
@@ -99,35 +72,42 @@ public class CalendarFragment extends Fragment {
         return view;
     }
 
-    private void setCalendarDate() {
+    private ArrayList<String> getCurrentDayList() {
+        ArrayList<String> array = new ArrayList<>();
 
-        if(this.dayList != null) {
-            this.dayList.clear();
-        }
+        Calendar calendar = Calendar.getInstance();
+        // 현재 년, 월의 1일 셋팅
+        calendar.set(globalDate.getYear(),globalDate.getMonth()-1,1);
 
-        int dayNum = globalDate.getDayNum();
+        int dayNum = calendar.get(Calendar.DAY_OF_WEEK) - 1 ;
 
         for(int i = 0; i < dayNum; i++) {
-            dayList.add("");
+            array.add("");
         }
 
-        for(int i = 0; i < globalDate.getActualMaximum(); i ++) {
-            dayList.add("" + (i + 1));
+        for(int i = 0; i < calendar.getActualMaximum(Calendar.DAY_OF_MONTH); i ++) {
+            array.add("" + (i + 1));
         }
 
-        for(int i = dayList.size(); i < GRID_COUNT; i ++) {
-            dayList.add("");
-
-       }
-
+        for(int i = array.size(); i < GRID_COUNT; i ++) {
+            array.add("");
+        }
+        return array;
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if (isVisibleToUser) {
-            setCalendarDate();
-            calendarGridAdapter.setDayList(dayList);
-            calendarGridAdapter.notifyDataSetChanged();
+            calendarBinding.gvCalendar.setAdapter(null);
+            dayList.clear();
+            dayList = getCurrentDayList();
+            DateBundle dateBundle = new DateBundle(String.valueOf(globalDate.getYear()),String.valueOf(globalDate.getMonth()),String.valueOf(globalDate.getDay()),null,null,null,null);
+            accounts.clear();
+            accounts = dbManager.selectByDate(dateBundle);
+            calendarGridAdapter = new CalendarGridAdapter(getContext(),dayList,accounts);
+            calendarBinding.gvCalendar.setAdapter(calendarGridAdapter);
+//            calendarGridAdapter.updateList(dayList,accounts);
+//            calendarGridAdapter.notifyDataSetChanged();
         }
     }
 }

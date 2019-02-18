@@ -90,7 +90,10 @@ public class DBManager {
 
     public String getItemType(DateBundle dateBundle) {
         //exist = 1 or not = 0
-        String sql = "SELECT EXISTS ( SELECT * FROM " + DBHelper.TBL_ACCOUNT + " WHERE " + "day = " + "'" + dateBundle.getDay()+"')";
+        String sql = "SELECT EXISTS ( SELECT * FROM " + DBHelper.TBL_ACCOUNT + " WHERE "
+                + "year = " + "'" + dateBundle.getYear() + "' " + "AND "
+                + "month = " + "'"+ dateBundle.getMonth() + "' " + "AND "
+                + "day = " + "'"+ dateBundle.getDay() + "' )";
         Cursor results = db.rawQuery(sql,null);
         results.moveToFirst();
 
@@ -101,15 +104,17 @@ public class DBManager {
         //exist ...
         Account account = selectByDateToFirstItem(dateBundle);
 
-        //minute만 비교하면 안됨 ... 시도 비교해야함
-        if(Integer.parseInt(account.getDateBundle().getHour()+account.getDateBundle().getMinute()) > Integer.parseInt(dateBundle.getHour()+dateBundle.getMinute())){
-            //만약 db에 있는 가장 최신데이터보다 hour+minute값이 빠르면 type들 초기화 후 return 0 (header)
-            sql = "UPDATE " + DBHelper.TBL_ACCOUNT + " SET type = '" + 1 + "' WHERE "
-                    + "year = " + "'" + dateBundle.getYear() + "' " + "AND "
-                    + "month = " + "'"+ dateBundle.getMonth() + "' " + "AND "
-                    + "day = " + "'"+ dateBundle.getDay() + "' ";
-            db.execSQL(sql);
-            return "0";
+        if(account != null) {
+            //minute만 비교하면 안됨 ... 시도 비교해야함
+            if(Integer.parseInt(account.getDateBundle().getHour()+account.getDateBundle().getMinute()) > Integer.parseInt(dateBundle.getHour()+dateBundle.getMinute())){
+                //만약 db에 있는 가장 최신데이터보다 hour+minute값이 빠르면 type들 초기화 후 return 0 (header)
+                sql = "UPDATE " + DBHelper.TBL_ACCOUNT + " SET type = '" + 1 + "' WHERE "
+                        + "year = " + "'" + dateBundle.getYear() + "' " + "AND "
+                        + "month = " + "'"+ dateBundle.getMonth() + "' " + "AND "
+                        + "day = " + "'"+ dateBundle.getDay() + "' ";
+                db.execSQL(sql);
+                return "0";
+            }
         }
             return results.getString(0);
     }

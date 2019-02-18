@@ -14,6 +14,7 @@
         android:layout_marginBottom="15dp"
         android:textColor="#000"
         android:gravity="center_horizontal"
+        android:textSize="10dp"
         />
 
     <TextView
@@ -21,8 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/spending"
-        android:text="+190,000"
-        android:textSize="10dp"
+        android:textSize="9dp"
         />
 
     <TextView
@@ -30,8 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/incoming"
-        android:text="-190,000"
-        android:textSize="10dp"
+        android:textSize="9dp"
         />
 
 </LinearLayout>

@@ -217,6 +217,7 @@
                     android:inputType="number"
                     android:textColor="@color/black"
                     android:textColorHint="@color/actionBar"
+                    android:maxLength="10"
                     android:theme="@style/CustomTextAppearance" />
             </android.support.design.widget.TextInputLayout>
 

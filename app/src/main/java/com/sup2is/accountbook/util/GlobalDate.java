@@ -55,6 +55,10 @@ public class GlobalDate {
         return calendar.get(Calendar.DATE);
     }
 
+    /**
+     *
+     * return 1 : sunday ... 7 :saturday
+    */
     public int getDayNum() {
         return calendar.get(Calendar.DAY_OF_WEEK);
     }

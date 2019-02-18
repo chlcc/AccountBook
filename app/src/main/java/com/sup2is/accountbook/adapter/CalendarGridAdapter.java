@@ -2,6 +2,8 @@ package com.sup2is.accountbook.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,23 +11,28 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.sup2is.accountbook.R;
+import com.sup2is.accountbook.activity.MainActivity;
+import com.sup2is.accountbook.model.Account;
+import com.sup2is.accountbook.util.CommaFormatter;
 import com.sup2is.accountbook.util.GlobalDate;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class CalendarGridAdapter extends BaseAdapter {
 
 
-    private List<String> dayList;
+    private static final String TAG = "### "+CalendarGridAdapter.class.getSimpleName() + " : ";
+    private ArrayList<Account> accounts;
+    private ArrayList<String> dayList;
     private LayoutInflater inflater;
-    GlobalDate globalDate;
+    private Context context;
 
-    public void setDayList(List<String> dayList) {
+    public CalendarGridAdapter(Context context, ArrayList<String> dayList, ArrayList<Account> accounts) {
+        this.context = context;
         this.dayList = dayList;
-    }
-
-    public CalendarGridAdapter(Context context, List<String> dayList) {
-        this.dayList = dayList;
+        this.accounts = accounts;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -52,6 +59,7 @@ public class CalendarGridAdapter extends BaseAdapter {
 
         ViewHolder holder;
 
+        Calendar currentCal = Calendar.getInstance();
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.layout_calendar_day_item, parent, false);
             holder = new ViewHolder();
@@ -63,30 +71,44 @@ public class CalendarGridAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.tv_day.setText("" + getItem(position));
-//        holder.tv_incoming.setText("" + getItem(position));
-//        holder.tv_spending.setText("" + getItem(position));
+        long spending = 0;
+        long incoming = 0;
 
+        String day = getItem(position);
+        holder.tv_day.setText("" + day);
 
-        //해당 날짜 텍스트 컬러,배경 변경
+        if(!day.equals("")) {
+            for (Account account : accounts) {
+                if (account.getDateBundle().getDay().equals(day)) {
+                    if (account.getMethod().equals("수입")) {
+                        incoming += Long.parseLong(account.getMoney());
+                    } else {
+                        spending += Long.parseLong(account.getMoney());
+                    }
+                }
+            }
+            if (spending != 0) {
+                holder.tv_spending.setText("-" + CommaFormatter.comma(spending));
+            }
 
-        globalDate = GlobalDate.getInstance();
+            if (incoming != 0) {
+                holder.tv_incoming.setText("+" + CommaFormatter.comma(incoming));
+            }
 
-        int today = globalDate.getToday();
-
-        if (String.valueOf(today).equals(getItem(position))) { //오늘 day 텍스트 컬러 변경
-            holder.tv_day.setTypeface(null, Typeface.BOLD);
         }
-
         return convertView;
     }
 
     class ViewHolder {
-
         private TextView tv_day;
         private TextView tv_spending;
         private TextView tv_incoming;
+    }
 
+    public void updateList(ArrayList<String> dayList ,ArrayList<Account> accountList) {
+        this.accounts = accountList;
+        this.dayList = dayList;
+        this.notifyDataSetChanged();
     }
 
 

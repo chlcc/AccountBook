@@ -39,9 +39,6 @@ public class DailyListViewFragment extends Fragment implements View.OnClickListe
     private ArrayList<Account> accounts ;
     private boolean isVisible = false;
 
-
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -99,8 +96,8 @@ public class DailyListViewFragment extends Fragment implements View.OnClickListe
                 DateBundle temp = new DateBundle(
                         String.valueOf(globalDate.getYear()),
                         String.valueOf(globalDate.getMonth()),
-                        "0",
-                        null,"0","0","0");
+                        null,
+                        null,null,null,null);
                 accounts = dbManager.selectByDate(temp);
                 dailyRecycleViewAdapter.updateList(accounts);
             }else {
