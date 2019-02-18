@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.AppCompatSpinner;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -18,12 +19,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
 import com.sup2is.accountbook.R;
 import com.sup2is.accountbook.application.AccountBookApplication;
+import com.sup2is.accountbook.database.DBHelper;
 import com.sup2is.accountbook.database.DBManager;
 import com.sup2is.accountbook.databinding.FragmentInputFormBinding;
 import com.sup2is.accountbook.dialog.CustomDialog;
@@ -35,7 +38,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class InputFormDialogFragment extends DialogFragment implements View.OnClickListener {
+public class InputFormDialogFragment extends DialogFragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     private FragmentInputFormBinding inputFormBinding;
 
@@ -49,46 +52,49 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
 
     private int idx;
 
+    private ArrayAdapter<String> methodAdapter;
+    private ArrayAdapter<String> spendingAdapter;
+    private ArrayAdapter<String> groupAdapter;
+    private ArrayAdapter<String> incomingAdapter;
+
+    private ArrayList<String> groupList;
+    private ArrayList<String> spendingList;
+    private ArrayList<String> incomingList;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         Bundle bundle = getArguments();
-
         Window window = getDialog().getWindow();
         window.setGravity(Gravity.CENTER| Gravity.BOTTOM);
         window.getAttributes().windowAnimations = R.style.DialogAnimation;
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
         View view = inflater.inflate(R.layout.fragment_input_form,container,false);
         inputFormBinding = DataBindingUtil.bind(view);
-
         application = (AccountBookApplication) getActivity().getApplication();
         dbManager = application.getDbManager();
 
-        //todo method, spending, group은 전부 category db에서 불러오도록
-        ArrayList<String> methodList = new ArrayList<>();
-        methodList.add("지출");
-        methodList.add("수입");
-
-        ArrayAdapter<String> methodAdapter = new ArrayAdapter<>(getContext(),R.layout.layout_custom_spinner_text_item,methodList);
+        ArrayList<String> methodList = dbManager.getSpinnerList(DBHelper.METHOD_TYPE);
+        methodAdapter = new ArrayAdapter<>(getContext(),R.layout.layout_custom_spinner_text_item,methodList);
         methodAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         inputFormBinding.acsMethod.setAdapter(methodAdapter);
 
-        ArrayList<String> spendingList = new ArrayList<>();
-        spendingList.add("카드");
-        spendingList.add("현금");
+        groupList = dbManager.getSpinnerList(DBHelper.GROUP_TYPE);
+        groupAdapter = new ArrayAdapter<>(getContext(),R.layout.layout_custom_spinner_text_item,groupList);
+        groupAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        inputFormBinding.acsGroup.setAdapter(groupAdapter);
 
-        ArrayAdapter<String> spendingAdapter = new ArrayAdapter<>(getContext(),R.layout.layout_custom_spinner_text_item,spendingList);
+        spendingList = dbManager.getSpinnerList(DBHelper.SPENDING_TYPE);
+        spendingAdapter = new ArrayAdapter<>(getContext(),R.layout.layout_custom_spinner_text_item,spendingList);
         spendingAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         inputFormBinding.acsSpending.setAdapter(spendingAdapter);
 
-        ArrayList<String> groupList = new ArrayList<>();
-        groupList.add("식비");
-        groupList.add("교통비");
-        groupList.add("술값");
-        ArrayAdapter<String> groupAdapter = new ArrayAdapter<>(getContext(),R.layout.layout_custom_spinner_text_item,groupList);
-        groupAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        inputFormBinding.acsGroup.setAdapter(groupAdapter);
+        incomingList = dbManager.getSpinnerList(DBHelper.INCOMING_TYPE);
+        incomingAdapter = new ArrayAdapter<>(getContext(),R.layout.layout_custom_spinner_text_item,incomingList);
+        incomingAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        inputFormBinding.acsIncoming.setAdapter(incomingAdapter);
 
         //단순 input은 global date를 사용하면 안됨
         Calendar calendar = Calendar.getInstance();
@@ -98,12 +104,10 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
         datePickerDialog = new DatePickerDialog(getContext(),R.style.CustomDatePicker,new DatePickerListener(),calendar.get(Calendar.YEAR),(calendar.get(Calendar.MONTH)),calendar.get(Calendar.DATE));
         timePickerDialog = new TimePickerDialog(getContext(),R.style.CustomTimePicker,new TimePickerListener(),calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false);
 
-        //todo 만약 bundle 값이 있으면 idx로 db에 검색 후 저장된 값으로 스피너, 달력 , 시계 세팅
         if(bundle != null) {
             idx = bundle.getInt("idx");
             Account account = dbManager.selectByIdx(idx);
             inputFormBinding.acsMethod.setSelection(methodList.indexOf(account.getMethod()));
-
             inputFormBinding.tvTitle.setText(getResources().getString(R.string.modify));
             inputFormBinding.acsGroup.setSelection(groupList.indexOf(account.getGroup()));
             inputFormBinding.acsSpending.setSelection(spendingList.indexOf(account.getSpending()));
@@ -128,6 +132,7 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
         inputFormBinding.btnModify.setOnClickListener(this);
         inputFormBinding.btnDelete.setOnClickListener(this);
         inputFormBinding.etMoney.addTextChangedListener(textWatcher);
+        inputFormBinding.acsMethod.setOnItemSelectedListener(this);
         return view;
     }
 
@@ -139,14 +144,24 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
             case R.id.ib_add_group:
                 builder = new CustomDialog.Builder();
                 builder.setTitle("분류 저장하기")
-                        .setHint("내용을 입력해주세요");
+                        .setHint("내용을 입력해주세요")
+                        .setType(DBHelper.GROUP_TYPE);
                 dialog = new CustomDialog(getActivity(),builder);
                 dialog.show();
                 break;
             case R.id.ib_add_spending:
                 builder = new CustomDialog.Builder();
-                builder.setTitle("분류 저장하기")
-                        .setHint("내용을 입력해주세요");
+                builder.setTitle("지출 저장하기")
+                        .setHint("내용을 입력해주세요")
+                        .setType(DBHelper.SPENDING_TYPE);
+                dialog = new CustomDialog(getActivity(),builder);
+                dialog.show();
+                break;
+            case R.id.ib_add_incoming:
+                builder = new CustomDialog.Builder();
+                builder.setTitle("수입 저장하기")
+                        .setHint("내용을 입력해주세요")
+                        .setType(DBHelper.INCOMING_TYPE);
                 dialog = new CustomDialog(getActivity(),builder);
                 dialog.show();
                 break;
@@ -204,46 +219,97 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
     }
 
     private void addItem () {
+        DateBundle dateBundle = getDateBundle();
         String money = inputFormBinding.etMoney.getText().toString().replaceAll(",", "");
-        String date = inputFormBinding.tvDate.getText().toString();
-        String[] dates = date.split("\\.");
-        String time = inputFormBinding.tvTime.getText().toString();
-        String[] times = time.split(":");
         String group = inputFormBinding.acsGroup.getSelectedItem().toString();
         String method = inputFormBinding.acsMethod.getSelectedItem().toString();
-        String spending = inputFormBinding.acsSpending.getSelectedItem().toString();
+        String spending;
+        if(method.equals("수입")){
+            spending = inputFormBinding.acsIncoming.getSelectedItem().toString();
+        }else {
+            spending = inputFormBinding.acsSpending.getSelectedItem().toString();
+        }
+
         String content = inputFormBinding.etContent.getText().toString();
-        String dayOfWeek = getDayOfWeek(dates[0],dates[1],dates[2]); // year, month, day
-        DateBundle dateBundle = new DateBundle(dates[0],dates[1],dates[2],dayOfWeek,times[0],times[1],"0");
         String type = dbManager.getItemType(dateBundle);  // day, hour, minute
-        int idx = dbManager.getNextAutoIncrement();
+        int idx = dbManager.getNextAutoIncrement(DBHelper.TBL_ACCOUNT);
         Account account = new Account(idx,dateBundle,money,method,group,spending,content,type);
         dbManager.insertItem(account);
     }
 
-    private void modifyItem(int idx) {
-        String money = inputFormBinding.etMoney.getText().toString().replaceAll(",", "");
+    private DateBundle getDateBundle() {
         String date = inputFormBinding.tvDate.getText().toString();
         String[] dates = date.split("\\.");
         String time = inputFormBinding.tvTime.getText().toString();
         String[] times = time.split(":");
+        String dayOfWeek = getDayOfWeek(dates[0],dates[1],dates[2]); // year, month, day
+        return new DateBundle(dates[0],dates[1],dates[2],dayOfWeek,times[0],times[1],"0");
+    }
+
+    private void modifyItem(int idx) {
+        DateBundle dateBundle = getDateBundle();
+        String money = inputFormBinding.etMoney.getText().toString().replaceAll(",", "");
         String group = inputFormBinding.acsGroup.getSelectedItem().toString();
         String method = inputFormBinding.acsMethod.getSelectedItem().toString();
-        String spending = inputFormBinding.acsSpending.getSelectedItem().toString();
+        String spending;
+        if(method.equals("수입")){
+            spending = inputFormBinding.acsIncoming.getSelectedItem().toString();
+        }else {
+            spending = inputFormBinding.acsSpending.getSelectedItem().toString();
+        }
         String content = inputFormBinding.etContent.getText().toString();
-        String dayOfWeek = getDayOfWeek(dates[0],dates[1],dates[2]);
-        DateBundle dateBundle = new DateBundle(dates[0],dates[1],dates[2],dayOfWeek,times[0],times[1],"0");
         String type = dbManager.getItemType(dateBundle);
         Account newAccount = new Account(idx,dateBundle,money,method,group,spending,content,type);
+        //원본객체
         Account oldAccount = dbManager.selectByIdx(idx);
         dbManager.modifyItem(newAccount);
         dbManager.reorderingData(oldAccount.getDateBundle());
     }
 
     private void deleteItem(int idx) {
+        //원본객체
         Account oldAccount = dbManager.selectByIdx(idx);
         dbManager.deleteItem(idx);
         dbManager.reorderingData(oldAccount.getDateBundle());
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String selected = parent.getItemAtPosition(position).toString();
+
+        if(selected.equals("지출")) {
+            inputFormBinding.acsSpendingWrapper.setVisibility(View.VISIBLE);
+            inputFormBinding.acsIncomingWrapper.setVisibility(View.GONE);
+        }
+        if(selected.equals("수입")) {
+            inputFormBinding.acsIncomingWrapper.setVisibility(View.VISIBLE);
+            inputFormBinding.acsSpendingWrapper.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    public void refreshSpinnerAdapter(int type,String name) {
+        switch (type){
+            case DBHelper.GROUP_TYPE :
+                groupAdapter.add(name);
+                groupAdapter.notifyDataSetChanged();
+                inputFormBinding.acsGroup.setSelection(groupList.indexOf(name));
+                break;
+            case DBHelper.SPENDING_TYPE :
+                spendingAdapter.add(name);
+                spendingAdapter.notifyDataSetChanged();
+                inputFormBinding.acsSpending.setSelection(spendingList.indexOf(name));
+                break;
+            case DBHelper.INCOMING_TYPE :
+                incomingAdapter.add(name);
+                incomingAdapter.notifyDataSetChanged();
+                inputFormBinding.acsIncoming.setSelection(incomingList.indexOf(name));
+                break;
+        }
     }
 
     private class TimePickerListener implements TimePickerDialog.OnTimeSetListener{

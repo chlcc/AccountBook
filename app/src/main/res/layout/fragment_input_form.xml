@@ -14,8 +14,7 @@
             <TextView
                 android:id="@+id/tv_id"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
-                />
+                android:layout_height="0dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -119,7 +118,34 @@
                 android:background="@drawable/rounded_bg"
                 android:padding="@dimen/input_form_default_padding" />
 
+
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/input_form_default_margin_top">
+
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/acs_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/input_form_spinner_layout_height"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_bg"
+                    android:popupBackground="#aaa" />
+
+                <ImageButton
+                    android:id="@+id/ib_add_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@drawable/circle_img_btn"
+                    android:src="@drawable/plus_small" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/acs_spending_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/input_form_default_margin_top"
@@ -130,10 +156,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/input_form_spinner_layout_height"
                     android:layout_weight="1"
-                    android:popupBackground="#aaa"
                     android:background="@drawable/rounded_bg"
                     android:padding="@dimen/input_form_default_padding"
-                    />
+                    android:popupBackground="#aaa" />
 
                 <ImageButton
                     android:id="@+id/ib_add_spending"
@@ -145,23 +170,25 @@
                     android:src="@drawable/plus_small" />
 
             </LinearLayout>
-
             <LinearLayout
+                android:id="@+id/acs_incoming_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/input_form_default_margin_top"
-                >
+                android:visibility="gone"
+                android:orientation="horizontal">
 
                 <android.support.v7.widget.AppCompatSpinner
-                    android:id="@+id/acs_group"
+                    android:id="@+id/acs_incoming"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/input_form_spinner_layout_height"
                     android:layout_weight="1"
-                    android:popupBackground="#aaa"
-                    android:background="@drawable/rounded_bg" />
+                    android:background="@drawable/rounded_bg"
+                    android:padding="@dimen/input_form_default_padding"
+                    android:popupBackground="#aaa" />
 
                 <ImageButton
-                    android:id="@+id/ib_add_group"
+                    android:id="@+id/ib_add_incoming"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -178,9 +205,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/input_form_default_margin_top"
                 android:padding="@dimen/input_form_default_padding"
-                app:errorEnabled="true"
                 android:theme="@style/CustomTextAppearance"
-                >
+                app:errorEnabled="true">
                 <!--android:theme="@style/CustomTextAppearance"-->
 
                 <android.support.design.widget.TextInputEditText
@@ -207,9 +233,9 @@
                     android:layout_height="wrap_content"
                     android:hint="내용"
                     android:inputType="none"
+                    android:singleLine="true"
                     android:textColor="@color/black"
                     android:textColorHint="@color/actionBar"
-                    android:singleLine="true"
                     android:theme="@style/CustomTextAppearance" />
             </android.support.design.widget.TextInputLayout>
 
@@ -217,68 +243,64 @@
                 android:id="@+id/ll_input_btn_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:gravity="center"
+                android:orientation="horizontal"
                 android:padding="@dimen/input_form_default_padding">
 
                 <Button
                     android:id="@+id/btn_more"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/input_form_btn_layout_height"
+                    android:layout_margin="5dp"
                     android:background="@drawable/rounded_btn"
                     android:text="@string/more"
-                    android:textColor="@color/white"
-                    android:layout_margin="5dp"
-                    />
+                    android:textColor="@color/white" />
 
                 <Button
                     android:id="@+id/btn_ok"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/input_form_btn_layout_height"
+                    android:layout_margin="5dp"
                     android:background="@drawable/rounded_btn"
                     android:text="@string/ok"
-                    android:textColor="@color/white"
-                    android:layout_margin="5dp"
-                    />
+                    android:textColor="@color/white" />
 
                 <Button
                     android:id="@+id/btn_cancel"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/input_form_btn_layout_height"
+                    android:layout_margin="5dp"
                     android:background="@drawable/rounded_btn"
                     android:text="@string/cancel"
-                    android:textColor="@color/white"
-                    android:layout_margin="5dp"
-                    />
+                    android:textColor="@color/white" />
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/ll_edit_btn_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:gravity="center"
-                android:visibility="gone"
-                android:padding="@dimen/input_form_default_padding">
+                android:orientation="horizontal"
+                android:padding="@dimen/input_form_default_padding"
+                android:visibility="gone">
 
                 <Button
                     android:id="@+id/btn_modify"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/input_form_btn_layout_height"
+                    android:layout_margin="5dp"
                     android:background="@drawable/rounded_btn"
                     android:text="@string/modify"
-                    android:textColor="@color/white"
-                    android:layout_margin="5dp"
-                    />
+                    android:textColor="@color/white" />
 
                 <Button
                     android:id="@+id/btn_delete"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/input_form_btn_layout_height"
+                    android:layout_margin="5dp"
                     android:background="@drawable/rounded_btn"
                     android:text="@string/delete"
-                    android:textColor="@color/white"
-                    android:layout_margin="5dp"
-                    />
+                    android:textColor="@color/white" />
 
             </LinearLayout>
         </LinearLayout>

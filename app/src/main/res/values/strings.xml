@@ -17,4 +17,29 @@
     <string name="delete">삭제하기</string>
 
 
+    <string-array name="default_method_array">
+        <item>지출</item>
+        <item>수입</item>
+    </string-array>
+
+    <string-array name="default_group_array">
+        <item>카드</item>
+        <item>현금</item>
+    </string-array>
+
+
+    <string-array name="default_incoming_array">
+        <item>월급</item>
+        <item>용돈</item>
+    </string-array>
+
+    <string-array name="default_spending_array">
+        <item>식비</item>
+        <item>커피</item>
+    </string-array>
+
+
 </resources>
+
+
+

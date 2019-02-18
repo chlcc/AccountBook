@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import com.sup2is.accountbook.model.Account;
+import com.sup2is.accountbook.model.Category;
 import com.sup2is.accountbook.model.DateBundle;
 
 import java.util.ArrayList;
@@ -30,19 +31,19 @@ public class DBManager {
     public void insertItem(Account item) {
         String sql = "INSERT INTO " + DBHelper.TBL_ACCOUNT + " VALUES ("
                 + "NULL" + ","
-                + "'" +item.getDateBundle().getYear()+ "'" + ","
-                + "'" +item.getDateBundle().getMonth()+ "'" + ","
-                + "'" +item.getDateBundle().getDay()+ "'" + ","
-                + "'" +item.getDateBundle().getDayOfWeek()+ "'" + ","
-                + "'" +item.getDateBundle().getHour()+ "'" + ","
-                + "'" +item.getDateBundle().getMinute()+ "'" + ","
-                + "'" +item.getDateBundle().getSeconds()+ "'" + ","
-                + "'" +item.getMoney()+ "'" + ","
-                + "'" +item.getMethod()+ "'" + ","
-                + "'" +item.getGroup()+ "'" + ","
-                + "'" +item.getSpending()+ "'" + ","
-                + "'" +item.getContent()+ "'" + ","
-                + "'" +item.getType()+ "'" + ")";
+                + "'" +item.getDateBundle().getYear()+ "' ,"
+                + "'" +item.getDateBundle().getMonth()+ "' ,"
+                + "'" +item.getDateBundle().getDay()+ "' ,"
+                + "'" +item.getDateBundle().getDayOfWeek()+ "' ,"
+                + "'" +item.getDateBundle().getHour()+ "' ,"
+                + "'" +item.getDateBundle().getMinute()+ "' ,"
+                + "'" +item.getDateBundle().getSeconds()+ "' ,"
+                + "'" +item.getMoney()+ "' ,"
+                + "'" +item.getMethod()+ "' ,"
+                + "'" +item.getGroup()+ "' ,"
+                + "'" +item.getSpending()+ "' ,"
+                + "'" +item.getContent()+ "' ,"
+                + "'" +item.getType()+ "')";
         db.execSQL(sql);
 }
 
@@ -94,14 +95,15 @@ public class DBManager {
         results.moveToFirst();
 
         if(results.getInt(0) == 0) {
-            //not
             return results.getString(0);
         }
 
         //exist ...
         Account account = selectByDateToFirstItem(dateBundle);
-        if(Integer.parseInt(account.getDateBundle().getMinute()) > Integer.parseInt(dateBundle.getMinute())){
-            //만약 db에 있는 가장 최신데이터보다 minute값이 빠르면 type들 초기화 후 return 0 (header)
+
+        //minute만 비교하면 안됨 ... 시도 비교해야함
+        if(Integer.parseInt(account.getDateBundle().getHour()+account.getDateBundle().getMinute()) > Integer.parseInt(dateBundle.getHour()+dateBundle.getMinute())){
+            //만약 db에 있는 가장 최신데이터보다 hour+minute값이 빠르면 type들 초기화 후 return 0 (header)
             sql = "UPDATE " + DBHelper.TBL_ACCOUNT + " SET type = '" + 1 + "' WHERE "
                     + "year = " + "'" + dateBundle.getYear() + "' " + "AND "
                     + "month = " + "'"+ dateBundle.getMonth() + "' " + "AND "
@@ -109,16 +111,23 @@ public class DBManager {
             db.execSQL(sql);
             return "0";
         }
-
-        return results.getString(0);
-
+            return results.getString(0);
     }
 
-    public int getNextAutoIncrement() {
-        String sql = "SELECT * FROM SQLITE_SEQUENCE";
+    public int getNextAutoIncrement(String tableName) {
+        String sql = "SELECT * FROM SQLITE_SEQUENCE WHERE name = " + "'" + tableName + "'";
         Cursor results = db.rawQuery(sql,null);
         if(results.moveToFirst()){
             return results.getInt(results.getColumnIndex("seq"));
+        }
+        return 0;
+    }
+
+    public int getNextCategorySeq(int type) {
+        String sql = "SELECT MAX(seq) FROM " + DBHelper.TBL_CATEGORY + " WHERE type = '" + type + "' ";
+        Cursor result = db.rawQuery(sql, null);
+        if(result.moveToFirst()) {
+            return result.getInt(0) + 1;
         }
         return 0;
     }
@@ -218,4 +227,24 @@ public class DBManager {
     }
 
 
+    public ArrayList<String> getSpinnerList(int type) {
+        String sql = "SELECT * FROM " + DBHelper.TBL_CATEGORY + " WHERE type = " + "'" + type + "' ";
+        Cursor results = db.rawQuery(sql,null);
+        ArrayList<String> list = new ArrayList<>();
+        results.moveToFirst();
+        while (!results.isAfterLast()) {
+            list.add(results.getString(results.getColumnIndex("name")));
+            results.moveToNext();
+        }
+        return list;
+    }
+
+    public void insertCategory(Category category) {
+        String sql = "INSERT INTO " + DBHelper.TBL_CATEGORY + " VALUES ("
+                + "NULL" + ","
+                + "'" +category.getSeq()+ "' ,"
+                + "'" +category.getType()+ "' ,"
+                + "'" +category.getName() + "')";
+        db.execSQL(sql);
+    }
 }

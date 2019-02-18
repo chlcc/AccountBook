@@ -110,6 +110,8 @@ public class DailyRecycleViewAdapter extends RecyclerView.Adapter<DailyRecycleVi
             headerViewHolder.tv_spending.setText(account.getSpending());
             headerViewHolder.tv_group.setText(account.getGroup());
 
+
+            //수입일 경우 spending 에 incoming
             if(account.getMethod().equals("수입")) {
                 headerViewHolder.tv_money.setTextColor(context.getResources().getColor(R.color.incoming));
             }else {

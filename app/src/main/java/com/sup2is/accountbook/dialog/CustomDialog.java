@@ -1,38 +1,51 @@
 package com.sup2is.accountbook.dialog;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.sup2is.accountbook.R;
+import com.sup2is.accountbook.activity.MainActivity;
+import com.sup2is.accountbook.application.AccountBookApplication;
+import com.sup2is.accountbook.database.DBHelper;
+import com.sup2is.accountbook.database.DBManager;
 import com.sup2is.accountbook.databinding.LayoutCustomDialogBinding;
+import com.sup2is.accountbook.fragment.InputFormDialogFragment;
+import com.sup2is.accountbook.model.Category;
 
 public class CustomDialog extends Dialog implements View.OnClickListener {
 
+    private AccountBookApplication application;
 
     private LayoutCustomDialogBinding customDialogBinding;
+
+    private DBManager dbManager;
 
     private final Context context;
 
     private final String hint;
     private final String title;
+    private final int type;
 
     public CustomDialog(@NonNull Context context, Builder builder) {
         super(context);
         this.context = context;
         this.hint = builder.hint;
         this.title = builder.title;
+        this.type = builder.type;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        application = (AccountBookApplication) context.getApplicationContext();
+        dbManager = application.getDbManager();
 
         View view = LayoutInflater.from(context).inflate(R.layout.layout_custom_dialog,null,false);
 
@@ -42,6 +55,7 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
         customDialogBinding.etInput.setHint(hint);
         customDialogBinding.btnCancel.setOnClickListener(this);
         customDialogBinding.btnOk.setOnClickListener(this);
+
     }
 
     @Override
@@ -52,7 +66,12 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
                 break;
 
             case R.id.btn_ok :
-                //todo db에 저장하기 !
+                String name = customDialogBinding.etInput.getText().toString();
+                Category category = new Category(dbManager.getNextAutoIncrement(DBHelper.TBL_CATEGORY),dbManager.getNextCategorySeq(type),type,name);
+                dbManager.insertCategory(category);
+                FragmentManager fm = ((MainActivity)context).getSupportFragmentManager();
+                InputFormDialogFragment inputForm = (InputFormDialogFragment) fm.findFragmentByTag("input");
+                inputForm.refreshSpinnerAdapter(type,name);
                 dismiss();
                 break;
         }
@@ -61,6 +80,7 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
     public static class Builder{
         private String hint;
         private String title;
+        private int type;
 
         public Builder setHint(String hint) {
             this.hint = hint;
@@ -69,6 +89,10 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
 
         public Builder setTitle(String title) {
             this.title = title;
+            return this;
+        }
+        public Builder setType(int type) {
+            this.type = type;
             return this;
         }
     }
