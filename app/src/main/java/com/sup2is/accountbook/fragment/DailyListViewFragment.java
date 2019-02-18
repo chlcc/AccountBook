@@ -83,8 +83,11 @@ public class DailyListViewFragment extends Fragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
         FragmentManager fm = getFragmentManager();
-        InputFormDialogFragment inputFormDialogFragment = new InputFormDialogFragment();
-        inputFormDialogFragment.show(fm,"input");
+        Fragment currentDialog = fm.findFragmentByTag("input");
+        if(currentDialog == null) {
+            InputFormDialogFragment inputFormDialogFragment = new InputFormDialogFragment();
+            inputFormDialogFragment.show(fm,"input");
+        }
     }
 
     @Override
