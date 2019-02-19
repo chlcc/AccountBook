@@ -252,4 +252,34 @@ public class DBManager {
                 + "'" +category.getName() + "')";
         db.execSQL(sql);
     }
+
+
+
+    //한글 select 안됨 .. ㅠㅠ
+    public long selectByDateToTotalSpending(DateBundle dateBundle) {
+        String sql = "SELECT SUM(money) FROM " + DBHelper.TBL_ACCOUNT + " WHERE "
+                + "year = " + "'" + dateBundle.getYear() + "' " + "AND "
+                + "month = " + "'"+ dateBundle.getMonth() + "' " + "AND "
+                + "day = " + "'"+ dateBundle.getDay() + "' " + "AND "
+                + "method = " + "'" + "지출" +"'";
+        Cursor result = db.rawQuery(sql,null);
+        if(result.moveToFirst()) {
+            return result.getInt(0);
+        }
+        return 0;
+    }
+
+    //한글 select 안됨 .. ㅠㅠ
+    public long selectByDateToTotalIncoming(DateBundle dateBundle) {
+        String sql = "SELECT SUM(money) FROM " + DBHelper.TBL_ACCOUNT + " WHERE "
+                + "year = " + "'" + dateBundle.getYear() + "' " + "AND "
+                + "month = " + "'"+ dateBundle.getMonth() + "' " + "AND "
+                + "day = " + "'"+ dateBundle.getDay() + "' " + "AND "
+                + "method = " + "'수입'";
+        Cursor result = db.rawQuery(sql,null);
+        if(result.moveToFirst()) {
+            return result.getInt(0);
+        }
+        return 0;
+    }
 }

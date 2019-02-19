@@ -15,33 +15,38 @@ import android.widget.Toast;
 import com.sup2is.accountbook.R;
 import com.sup2is.accountbook.adapter.TabPagerAdapter;
 import com.sup2is.accountbook.application.AccountBookApplication;
+import com.sup2is.accountbook.database.DBManager;
 import com.sup2is.accountbook.databinding.ActivityMainBinding;
 import com.sup2is.accountbook.databinding.LayoutActionbarBinding;
 import com.sup2is.accountbook.handler.ActionbarHandler;
+import com.sup2is.accountbook.model.Account;
+import com.sup2is.accountbook.model.DateBundle;
+import com.sup2is.accountbook.util.CommaFormatter;
 import com.sup2is.accountbook.util.GlobalDate;
 import com.sup2is.accountbook.util.SharedPreferenceManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
 
 
     private AccountBookApplication application;
-
     private SharedPreferenceManager pref;
-
     private ActivityMainBinding binding;
-
     private LayoutActionbarBinding actionbarBinding;
-
     private TabPagerAdapter tabPagerAdapter;
-
     private int tabPosition;
+    private DBManager dbManager;
+    private GlobalDate globalDate = GlobalDate.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         application = (AccountBookApplication) getApplication();
+        dbManager = application.getDbManager();
         pref = application.getSpm();
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         viewInit();
@@ -93,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
 
         tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
 
-
         binding.vpContainer.setOffscreenPageLimit(3);
         binding.vpContainer.setAdapter(tabPagerAdapter);
         binding.vpContainer.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -117,11 +121,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //global date
-        GlobalDate globalDate = GlobalDate.getInstance();
-        actionbarBinding.tvCalendar.setText(globalDate.getYearMonthToString());
-
-
+        refreshActionBar();
     }
 
     public void refreshFragment() {
@@ -131,5 +131,31 @@ public class MainActivity extends AppCompatActivity {
 
     public void setCalendarText(String date) {
         actionbarBinding.tvCalendar.setText(date);
+    }
+
+
+    public void refreshActionBar() {
+        DateBundle dateBundle = new DateBundle(String.valueOf(globalDate.getYear()), String.valueOf(globalDate.getMonth()), String.valueOf(globalDate.getDay()),null,null,null,null);
+        ArrayList<Account> accounts = dbManager.selectByDate(dateBundle);
+
+        long incoming = 0;
+        long spending = 0;
+
+        for (Account temp : accounts) {
+            if (temp.getMethod().equals("수입")) {
+                incoming += Long.parseLong(temp.getMoney());
+            }
+
+            if (temp.getMethod().equals("지출")) {
+                spending += Long.parseLong(temp.getMoney());
+            }
+        }
+
+
+        actionbarBinding.tvGoalMoney.setText("");
+        actionbarBinding.tvIncomingMoney.setText(CommaFormatter.comma(incoming) + "원");
+        actionbarBinding.tvSpendingMoney.setText(CommaFormatter.comma(spending) + "원");
+
+        actionbarBinding.tvCalendar.setText(globalDate.getYearMonthToString());
     }
 }

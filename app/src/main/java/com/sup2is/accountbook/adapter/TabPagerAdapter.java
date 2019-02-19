@@ -65,10 +65,10 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
                 calendarFragment.setUserVisibleHint(calendarFragment.getUserVisibleHint());
                 break;
             case 2:
-                statisticsFragment.onResume();
+                statisticsFragment.setUserVisibleHint(statisticsFragment.getUserVisibleHint());
                 break;
             case 3:
-                settingsFragment.onResume();
+                settingsFragment.setUserVisibleHint(settingsFragment.getUserVisibleHint());
                 break;
         }
     }

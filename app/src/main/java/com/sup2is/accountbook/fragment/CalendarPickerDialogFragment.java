@@ -64,11 +64,9 @@ public class CalendarPickerDialogFragment extends DialogFragment {
             int selectedMonth = calendarPickerBinding.npMonth.getValue() - 1;
             int selectedYear = calendarPickerBinding.npYear.getValue();
             globalDate.setDate(selectedYear,selectedMonth,1);
-            ((MainActivity)(getActivity())).setCalendarText(globalDate.getYearMonthToString());
             ((MainActivity)(getActivity())).refreshFragment();
+            ((MainActivity)(getActivity())).refreshActionBar();
             getDialog().dismiss();
         }
     }
 }
-
-

@@ -23,6 +23,7 @@ public class ActionbarHandler {
         parent = (RelativeLayout) view.getParent();
         ((TextView) parent.findViewById(R.id.tv_calendar)).setText(globalDate.getYearMonthToString());
         ((MainActivity)view.getContext()).refreshFragment();
+        ((MainActivity)view.getContext()).refreshActionBar();
     }
 
     public void onClickRightButton (View view) {
@@ -31,6 +32,7 @@ public class ActionbarHandler {
         parent = (RelativeLayout) view.getParent();
         ((TextView) parent.findViewById(R.id.tv_calendar)).setText(globalDate.getYearMonthToString());
         ((MainActivity)view.getContext()).refreshFragment();
+        ((MainActivity)view.getContext()).refreshActionBar();
     }
 
     public void onClickCalendarPicker(View view) {

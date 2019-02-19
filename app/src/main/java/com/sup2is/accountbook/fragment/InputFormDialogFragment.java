@@ -25,6 +25,7 @@ import android.widget.DatePicker;
 import android.widget.TimePicker;
 
 import com.sup2is.accountbook.R;
+import com.sup2is.accountbook.activity.MainActivity;
 import com.sup2is.accountbook.application.AccountBookApplication;
 import com.sup2is.accountbook.database.DBHelper;
 import com.sup2is.accountbook.database.DBManager;
@@ -235,6 +236,7 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
         int idx = dbManager.getNextAutoIncrement(DBHelper.TBL_ACCOUNT);
         Account account = new Account(idx,dateBundle,money,method,group,spending,content,type);
         dbManager.insertItem(account);
+        ((MainActivity)(getActivity())).refreshActionBar();
     }
 
     private DateBundle getDateBundle() {
@@ -264,6 +266,7 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
         Account oldAccount = dbManager.selectByIdx(idx);
         dbManager.modifyItem(newAccount);
         dbManager.reorderingData(oldAccount.getDateBundle());
+        ((MainActivity)(getActivity())).refreshActionBar();
     }
 
     private void deleteItem(int idx) {
@@ -271,6 +274,7 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
         Account oldAccount = dbManager.selectByIdx(idx);
         dbManager.deleteItem(idx);
         dbManager.reorderingData(oldAccount.getDateBundle());
+        ((MainActivity)(getActivity())).refreshActionBar();
     }
 
     @Override
