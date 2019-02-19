@@ -206,7 +206,7 @@ public class DailyRecycleViewAdapter extends RecyclerView.Adapter<DailyRecycleVi
             Bundle bundle = new Bundle();
             bundle.putInt("idx",idx);
             inputFormDialogFragment.setArguments(bundle);
-            inputFormDialogFragment.show(fm,"edit");
+            inputFormDialogFragment.show(fm,"input");
             return true;
         }
     };

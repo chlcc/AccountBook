@@ -136,21 +136,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void refreshActionBar() {
         DateBundle dateBundle = new DateBundle(String.valueOf(globalDate.getYear()), String.valueOf(globalDate.getMonth()), String.valueOf(globalDate.getDay()),null,null,null,null);
-        ArrayList<Account> accounts = dbManager.selectByDate(dateBundle);
+//        ArrayList<Account> accounts = dbManager.selectByDate(dateBundle);
 
-        long incoming = 0;
-        long spending = 0;
-
-        for (Account temp : accounts) {
-            if (temp.getMethod().equals("수입")) {
-                incoming += Long.parseLong(temp.getMoney());
-            }
-
-            if (temp.getMethod().equals("지출")) {
-                spending += Long.parseLong(temp.getMoney());
-            }
-        }
-
+        long incoming = dbManager.selectByDateToTotalIncoming(dateBundle);
+        long spending = dbManager.selectByDateToTotalSpending(dateBundle);
 
         actionbarBinding.tvGoalMoney.setText("");
         actionbarBinding.tvIncomingMoney.setText(CommaFormatter.comma(incoming) + "원");

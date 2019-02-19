@@ -15,6 +15,7 @@
     <string name="total">총액</string>
     <string name="modify">수정하기</string>
     <string name="delete">삭제하기</string>
+    <string name="goal">목표</string>
 
 
     <string-array name="default_method_array">

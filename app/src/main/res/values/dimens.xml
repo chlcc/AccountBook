@@ -7,7 +7,7 @@
 
 
     <!--action bar-->
-    <dimen name="actionbar_layout_height">130dp</dimen>
+    <dimen name="actionbar_layout_height">140dp</dimen>
     <dimen name="actionbar_tv_calendar_text_size">20dp</dimen>
     <dimen name="actionbar_ib_left_arrow_margin_right">10dp</dimen>
     <dimen name="actionbar_ib_right_arrow_margin_left">10dp</dimen>

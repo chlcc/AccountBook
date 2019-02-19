@@ -1,6 +1,7 @@
 package com.sup2is.accountbook.fragment;
 
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,15 +14,29 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.sup2is.accountbook.R;
+import com.sup2is.accountbook.application.AccountBookApplication;
+import com.sup2is.accountbook.database.DBManager;
 import com.sup2is.accountbook.databinding.FragmentStatisticsBinding;
+import com.sup2is.accountbook.model.Account;
+import com.sup2is.accountbook.model.DateBundle;
+import com.sup2is.accountbook.util.CommaFormatter;
+import com.sup2is.accountbook.util.GlobalDate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class StatisticsFragment extends BaseFragment {
 
     private static final String TAG = StatisticsFragment.class.getSimpleName();
 
-    FragmentStatisticsBinding statisticsBinding;
+    private FragmentStatisticsBinding statisticsBinding;
+
+    private AccountBookApplication application;
+    private DBManager dbManager;
+    private GlobalDate globalDate = GlobalDate.getInstance();
+
 
     @Nullable
     @Override
@@ -30,55 +45,80 @@ public class StatisticsFragment extends BaseFragment {
 
         View view = inflater.inflate(R.layout.fragment_statistics,container,false);
         statisticsBinding = DataBindingUtil.bind(view);
+        application = (AccountBookApplication) getActivity().getApplication();
+        dbManager = application.getDbManager();
+        initChart();
+        return view;
+    }
 
-        statisticsBinding.pcContainer.setUsePercentValues(true);
 
+    private void initChart() {
 
         ArrayList<Entry> dataSet = new ArrayList<>();
-
-        dataSet.add(new Entry(8,0));
-        dataSet.add(new Entry(15,1));
-        dataSet.add(new Entry(12,2));
-        dataSet.add(new Entry(30,3));
-        dataSet.add(new Entry(9,4));
-        dataSet.add(new Entry(9,5));
-        dataSet.add(new Entry(9,6));
-        dataSet.add(new Entry(9,7));
-        dataSet.add(new Entry(9,8));
-        dataSet.add(new Entry(9,9));
-
-        PieDataSet pieDataSet = new PieDataSet(dataSet,"statistic");
-
         ArrayList<String> xVals = new ArrayList<>();
 
-        xVals.add("January");
-        xVals.add("February");
-        xVals.add("March");
-        xVals.add("April");
-        xVals.add("May");
-        xVals.add("June");
-        xVals.add("23");
-        xVals.add("53");
-        xVals.add("15");
-        xVals.add("asdf");
-        xVals.add("zx");
+        if(statisticsBinding.pcContainer.getData() != null) {
+            statisticsBinding.pcContainer.clear();
+            statisticsBinding.pcContainer.invalidate();
+        }
 
-        pieDataSet.setColors(ColorTemplate.VORDIPLOM_COLORS);
-        PieData data = new PieData(xVals, pieDataSet);
-        data.setValueTextSize(15);
+        DateBundle dateBundle = new DateBundle(String.valueOf(globalDate.getYear()), String.valueOf(globalDate.getMonth()), null,null,null,null,null);
+        ArrayList<Account> accounts = dbManager.selectByDate(dateBundle);
+        ArrayList<String> spendingList = dbManager.selectByDateToSpendingList(dateBundle);
 
-        statisticsBinding.pcContainer.setDrawHoleEnabled(true);
-        statisticsBinding.pcContainer.setTransparentCircleRadius(32f);
-        statisticsBinding.pcContainer.setHoleRadius(30f);
-        statisticsBinding.pcContainer.setData(data);
-        statisticsBinding.pcContainer.setDescription("");
+        statisticsBinding.pcContainer.setUsePercentValues(true);
+        Map<String,Long> dataMap = new HashMap<>();
+        for(String spending : spendingList) {
+            long value;
+            dataMap.put(spending, 0L);
+            for(Account account : accounts){
+                if(account.getSpending().equals(spending)){
+                    value = dataMap.get(spending) + Long.parseLong(account.getMoney());
+                    dataMap.remove(spending);
+                    dataMap.put(spending,value);
+                }
+            }
+        }
 
-        return view;
+        Iterator<String> keys = dataMap.keySet().iterator();
+
+        if(keys.hasNext()) {
+            int index = 0;
+            while( keys.hasNext() ){
+                String key = keys.next();
+                dataSet.add(new Entry(dataMap.get(key),index));
+                xVals.add(key + "\n" + CommaFormatter.comma(dataMap.get(key)) + " 원");
+                index ++;
+            }
+
+            PieDataSet pieDataSet = new PieDataSet(dataSet,"");
+
+            PieData data = new PieData(xVals, pieDataSet);
+            pieDataSet.setColors(ColorTemplate.VORDIPLOM_COLORS);
+            data.setValueTextSize(11);
+            data.setValueTextColor(Color.DKGRAY);
+            statisticsBinding.pcContainer.setDrawHoleEnabled(true);
+            statisticsBinding.pcContainer.setTransparentCircleRadius(32f);
+            statisticsBinding.pcContainer.setHoleRadius(30f);
+            statisticsBinding.pcContainer.setData(data);
+            statisticsBinding.pcContainer.setDescription("");
+
+            long totalSpending = dbManager.selectByDateToTotalSpending(dateBundle);
+            statisticsBinding.pcContainer.setCenterText("총금액" + "\n" + CommaFormatter.comma(totalSpending) + "원" );
+        }
+
     }
 
 
     @Override
     public void refreshView() {
 
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if(isVisibleToUser){
+            initChart();
+        }
     }
 }

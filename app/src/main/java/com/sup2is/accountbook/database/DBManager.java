@@ -260,8 +260,7 @@ public class DBManager {
         String sql = "SELECT SUM(money) FROM " + DBHelper.TBL_ACCOUNT + " WHERE "
                 + "year = " + "'" + dateBundle.getYear() + "' " + "AND "
                 + "month = " + "'"+ dateBundle.getMonth() + "' " + "AND "
-                + "day = " + "'"+ dateBundle.getDay() + "' " + "AND "
-                + "method = " + "'" + "지출" +"'";
+                + "method = '지출'";
         Cursor result = db.rawQuery(sql,null);
         if(result.moveToFirst()) {
             return result.getInt(0);
@@ -274,12 +273,26 @@ public class DBManager {
         String sql = "SELECT SUM(money) FROM " + DBHelper.TBL_ACCOUNT + " WHERE "
                 + "year = " + "'" + dateBundle.getYear() + "' " + "AND "
                 + "month = " + "'"+ dateBundle.getMonth() + "' " + "AND "
-                + "day = " + "'"+ dateBundle.getDay() + "' " + "AND "
-                + "method = " + "'수입'";
+                + "method = '수입'";
         Cursor result = db.rawQuery(sql,null);
         if(result.moveToFirst()) {
             return result.getInt(0);
         }
         return 0;
+    }
+
+    public ArrayList<String> selectByDateToSpendingList(DateBundle dateBundle) {
+        String sql = "SELECT spending FROM " + DBHelper.TBL_ACCOUNT + " WHERE "
+                + "year = " + "'" + dateBundle.getYear() + "' " + "AND "
+                + "month = " + "'"+ dateBundle.getMonth() + "' " + "AND "
+                + "method = " + "'지출' GROUP BY spending";
+        Cursor results = db.rawQuery(sql,null);
+        ArrayList<String> list = new ArrayList<>();
+        results.moveToFirst();
+        while (!results.isAfterLast()) {
+            list.add(results.getString(results.getColumnIndex("spending")));
+            results.moveToNext();
+        }
+        return list;
     }
 }

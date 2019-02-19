@@ -101,7 +101,7 @@ public class CalendarFragment extends Fragment {
             calendarBinding.gvCalendar.setAdapter(null);
             dayList.clear();
             dayList = getCurrentDayList();
-            DateBundle dateBundle = new DateBundle(String.valueOf(globalDate.getYear()),String.valueOf(globalDate.getMonth()),String.valueOf(globalDate.getDay()),null,null,null,null);
+            DateBundle dateBundle = new DateBundle(String.valueOf(globalDate.getYear()),String.valueOf(globalDate.getMonth()),null,null,null,null,null);
             accounts.clear();
             accounts = dbManager.selectByDate(dateBundle);
             calendarGridAdapter = new CalendarGridAdapter(getContext(),dayList,accounts);
