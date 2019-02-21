@@ -19,9 +19,11 @@ import com.sup2is.accountbook.application.AccountBookApplication;
 import com.sup2is.accountbook.database.DBManager;
 import com.sup2is.accountbook.databinding.FragmentCalendarBinding;
 import com.sup2is.accountbook.model.Account;
+import com.sup2is.accountbook.model.CalendarItem;
 import com.sup2is.accountbook.model.DateBundle;
 import com.sup2is.accountbook.util.GlobalDate;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -39,6 +41,7 @@ public class CalendarFragment extends Fragment {
     private ArrayList<Account> accounts;
     private AccountBookApplication application;
     private DBManager dbManager;
+    private ArrayList<CalendarItem> calendarItems = new ArrayList<>();
 
     @Nullable
     @Override
@@ -51,10 +54,9 @@ public class CalendarFragment extends Fragment {
 
         DateBundle dateBundle = new DateBundle(String.valueOf(globalDate.getYear()),String.valueOf(globalDate.getMonth()),String.valueOf(globalDate.getDay()),null,null,null,null);
         accounts = dbManager.selectByDate(dateBundle);
-
         dayList = getCurrentDayList();
-
-        calendarGridAdapter = new CalendarGridAdapter(getContext(),dayList,accounts);
+        calendarItems = getItemList(dayList,accounts);
+        calendarGridAdapter = new CalendarGridAdapter(getContext(),calendarItems);
         calendarBinding.gvCalendar.setAdapter(calendarGridAdapter);
         calendarBinding.gvCalendar.setVerticalScrollBarEnabled(false);
 
@@ -70,6 +72,30 @@ public class CalendarFragment extends Fragment {
         }
 
         return view;
+    }
+
+    private ArrayList<CalendarItem> getItemList(ArrayList<String> dayList, ArrayList<Account> accounts) {
+
+        ArrayList<CalendarItem> result = new ArrayList<>();
+
+        long spendingMoney;
+        long incomingMoney;
+
+        for (String day : dayList) {
+            spendingMoney = 0;
+            incomingMoney = 0;
+            for (Account account : accounts) {
+                if(account.getDateBundle().getDay().equals(day)) {
+                    if(account.getMethod().equals("지출")){
+                        spendingMoney += Long.parseLong(account.getMoney());
+                    }else {
+                        incomingMoney += Long.parseLong(account.getMoney());
+                    }
+                }
+            }
+            result.add(new CalendarItem(day,spendingMoney,incomingMoney));
+        }
+        return result;
     }
 
     private ArrayList<String> getCurrentDayList() {
@@ -98,16 +124,11 @@ public class CalendarFragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if (isVisibleToUser) {
-            calendarBinding.gvCalendar.setAdapter(null);
-            dayList.clear();
-            dayList = getCurrentDayList();
             DateBundle dateBundle = new DateBundle(String.valueOf(globalDate.getYear()),String.valueOf(globalDate.getMonth()),null,null,null,null,null);
-            accounts.clear();
             accounts = dbManager.selectByDate(dateBundle);
-            calendarGridAdapter = new CalendarGridAdapter(getContext(),dayList,accounts);
-            calendarBinding.gvCalendar.setAdapter(calendarGridAdapter);
-//            calendarGridAdapter.updateList(dayList,accounts);
-//            calendarGridAdapter.notifyDataSetChanged();
+            dayList = getCurrentDayList();
+            calendarItems = getItemList(dayList,accounts);
+            calendarGridAdapter.updateList(calendarItems);
         }
     }
 }
