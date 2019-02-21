@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.sup2is.accountbook.R;
 import com.sup2is.accountbook.activity.MainActivity;
 import com.sup2is.accountbook.model.Account;
+import com.sup2is.accountbook.model.CalendarItem;
 import com.sup2is.accountbook.util.CommaFormatter;
 import com.sup2is.accountbook.util.GlobalDate;
 
@@ -24,27 +25,24 @@ public class CalendarGridAdapter extends BaseAdapter {
 
 
     private static final String TAG = "### "+CalendarGridAdapter.class.getSimpleName() + " : ";
-    private ArrayList<Account> accounts;
-    private ArrayList<String> dayList;
     private LayoutInflater inflater;
     private Context context;
+    private ArrayList<CalendarItem> calendarItems;
 
-    public CalendarGridAdapter(Context context, ArrayList<String> dayList, ArrayList<Account> accounts) {
+    public CalendarGridAdapter(Context context,ArrayList<CalendarItem> calendarItems ) {
         this.context = context;
-        this.dayList = dayList;
-        this.accounts = accounts;
+        this.calendarItems = calendarItems;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public int getCount() {
-        return dayList.size();
+        return calendarItems.size();
     }
 
-
     @Override
-    public String getItem(int position) {
-        return dayList.get(position);
+    public Object getItem(int position) {
+        return calendarItems.get(position);
     }
 
 
@@ -53,13 +51,11 @@ public class CalendarGridAdapter extends BaseAdapter {
         return position;
     }
 
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         ViewHolder holder;
 
-        Calendar currentCal = Calendar.getInstance();
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.layout_calendar_day_item, parent, false);
             holder = new ViewHolder();
@@ -71,30 +67,19 @@ public class CalendarGridAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        long spending = 0;
-        long incoming = 0;
+        CalendarItem calendarItem = (CalendarItem) getItem(position);
+        holder.tv_day.setText("" + calendarItem.getDay());
 
-        String day = getItem(position);
-        holder.tv_day.setText("" + day);
+        if(calendarItem.getSpendingMoney() != 0) {
+            holder.tv_spending.setText("-" + CommaFormatter.comma(calendarItem.getSpendingMoney()));
+        }else {
+            holder.tv_spending.setText("");
+        }
 
-        if(!day.equals("")) {
-            for (Account account : accounts) {
-                if (account.getDateBundle().getDay().equals(day)) {
-                    if (account.getMethod().equals("수입")) {
-                        incoming += Long.parseLong(account.getMoney());
-                    } else {
-                        spending += Long.parseLong(account.getMoney());
-                    }
-                }
-            }
-            if (spending != 0) {
-                holder.tv_spending.setText("-" + CommaFormatter.comma(spending));
-            }
-
-            if (incoming != 0) {
-                holder.tv_incoming.setText("+" + CommaFormatter.comma(incoming));
-            }
-
+        if(calendarItem.getIncomingMoney() != 0) {
+            holder.tv_incoming.setText("+" + CommaFormatter.comma(calendarItem.getIncomingMoney()));
+        }else {
+            holder.tv_incoming.setText("");
         }
         return convertView;
     }
@@ -105,13 +90,11 @@ public class CalendarGridAdapter extends BaseAdapter {
         private TextView tv_incoming;
     }
 
-    public void updateList(ArrayList<String> dayList ,ArrayList<Account> accountList) {
-        this.accounts = accountList;
-        this.dayList = dayList;
+    public void updateList(ArrayList<CalendarItem> calendarItems) {
+        this.calendarItems.clear();
+        this.calendarItems = calendarItems;
         this.notifyDataSetChanged();
     }
-
-
 }
 
 

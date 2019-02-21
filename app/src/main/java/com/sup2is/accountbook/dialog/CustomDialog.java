@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -31,6 +32,7 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
     private final String hint;
     private final String title;
     private final int type;
+    private final int maxLength;
 
     public CustomDialog(@NonNull Context context, Builder builder) {
         super(context);
@@ -38,6 +40,7 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
         this.hint = builder.hint;
         this.title = builder.title;
         this.type = builder.type;
+        this.maxLength = builder.maxLength;
     }
 
     @Override
@@ -53,6 +56,13 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
         customDialogBinding = DataBindingUtil.bind(view);
         customDialogBinding.tvTitle.setText(title);
         customDialogBinding.etInput.setHint(hint);
+
+        if(maxLength != 0) {
+            InputFilter[] filters = new InputFilter[1];
+            filters[0] = new InputFilter.LengthFilter(maxLength);
+            customDialogBinding.etInput.setFilters(filters);
+        }
+
         customDialogBinding.btnCancel.setOnClickListener(this);
         customDialogBinding.btnOk.setOnClickListener(this);
 
@@ -81,6 +91,7 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
         private String hint;
         private String title;
         private int type;
+        private int maxLength;
 
         public Builder setHint(String hint) {
             this.hint = hint;
@@ -94,6 +105,10 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
         public Builder setType(int type) {
             this.type = type;
             return this;
+        }
+
+        public void setMaxLength(int maxLength) {
+            this.maxLength = maxLength;
         }
     }
 }
