@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-
         <variable
             name="activity"
             type="com.sup2is.accountbook.activity.SplashActivity" />
@@ -13,11 +11,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ImageButton
+        <ImageView
+            android:id="@+id/iv_splash"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:src="@drawable/splash_bg" />
+            android:scaleType="fitXY"
+            android:background="@drawable/splash_anim"
+            />
 
         <TextView
             android:id="@+id/tv_app_version"

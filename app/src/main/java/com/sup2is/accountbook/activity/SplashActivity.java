@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -39,6 +40,8 @@ public class SplashActivity extends Activity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash);
         binding.tvAppVersion.setText("Version " + application.getVersionName());
 
+        AnimationDrawable anim = (AnimationDrawable) binding.ivSplash.getBackground();
+        anim.start();
 
         PermissionChecker.check(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_SMS,Manifest.permission.RECEIVE_SMS}
         , PermissionChecker.REQUEST_PERMISSION_CODE);
