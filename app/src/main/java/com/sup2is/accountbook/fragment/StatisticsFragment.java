@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +28,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class StatisticsFragment extends BaseFragment {
+public class StatisticsFragment extends Fragment {
 
     private static final String TAG = StatisticsFragment.class.getSimpleName();
 
@@ -51,13 +52,13 @@ public class StatisticsFragment extends BaseFragment {
         return view;
     }
 
-
     private void initChart() {
-
         ArrayList<Entry> dataSet = new ArrayList<>();
         ArrayList<String> xVals = new ArrayList<>();
 
         if(statisticsBinding.pcContainer.getData() != null) {
+            PieData data = new PieData(xVals, new PieDataSet(dataSet,""));
+            statisticsBinding.pcContainer.setData(data);
             statisticsBinding.pcContainer.clear();
             statisticsBinding.pcContainer.invalidate();
         }
@@ -81,7 +82,6 @@ public class StatisticsFragment extends BaseFragment {
         }
 
         Iterator<String> keys = dataMap.keySet().iterator();
-
         if(keys.hasNext()) {
             int index = 0;
             while( keys.hasNext() ){
@@ -105,14 +105,8 @@ public class StatisticsFragment extends BaseFragment {
 
             long totalSpending = dbManager.selectByDateToTotalSpending(dateBundle);
             statisticsBinding.pcContainer.setCenterText("총금액" + "\n" + CommaFormatter.comma(totalSpending) + "원" );
+            statisticsBinding.pcContainer.invalidate();
         }
-
-    }
-
-
-    @Override
-    public void refreshView() {
-
     }
 
     @Override
