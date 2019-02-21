@@ -146,7 +146,8 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
                 builder = new CustomDialog.Builder();
                 builder.setTitle("분류 저장하기")
                         .setHint("내용을 입력해주세요")
-                        .setType(DBHelper.GROUP_TYPE);
+                        .setType(DBHelper.GROUP_TYPE)
+                        .setMaxLength(3);
                 dialog = new CustomDialog(getActivity(),builder);
                 dialog.show();
                 break;
@@ -154,7 +155,8 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
                 builder = new CustomDialog.Builder();
                 builder.setTitle("지출 저장하기")
                         .setHint("내용을 입력해주세요")
-                        .setType(DBHelper.SPENDING_TYPE);
+                        .setType(DBHelper.SPENDING_TYPE)
+                        .setMaxLength(3);
                 dialog = new CustomDialog(getActivity(),builder);
                 dialog.show();
                 break;
@@ -162,7 +164,8 @@ public class InputFormDialogFragment extends DialogFragment implements View.OnCl
                 builder = new CustomDialog.Builder();
                 builder.setTitle("수입 저장하기")
                         .setHint("내용을 입력해주세요")
-                        .setType(DBHelper.INCOMING_TYPE);
+                        .setType(DBHelper.INCOMING_TYPE)
+                        .setMaxLength(3);
                 dialog = new CustomDialog(getActivity(),builder);
                 dialog.show();
                 break;
