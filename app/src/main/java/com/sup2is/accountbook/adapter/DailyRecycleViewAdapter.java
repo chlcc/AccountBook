@@ -133,6 +133,11 @@ public class DailyRecycleViewAdapter extends RecyclerView.Adapter<DailyRecycleVi
         return Integer.parseInt(accounts.get(position).getType());
     }
 
+    public void clearList() {
+        this.accounts.clear();
+        this.notifyDataSetChanged();
+    }
+
     abstract class  BaseViewHolder extends RecyclerView.ViewHolder {
         public BaseViewHolder(@NonNull View itemView) {
             super(itemView);

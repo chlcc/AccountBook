@@ -16,6 +16,7 @@
     <string name="modify">수정하기</string>
     <string name="delete">삭제하기</string>
     <string name="goal">목표</string>
+    <string name="no_data_exist">데이터가 없습니다.</string>
 
 
     <string-array name="default_method_array">

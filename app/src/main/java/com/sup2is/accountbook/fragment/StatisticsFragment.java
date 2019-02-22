@@ -48,6 +48,12 @@ public class StatisticsFragment extends Fragment {
         statisticsBinding = DataBindingUtil.bind(view);
         application = (AccountBookApplication) getActivity().getApplication();
         dbManager = application.getDbManager();
+        statisticsBinding.pcContainer.setDrawHoleEnabled(true);
+        statisticsBinding.pcContainer.setTransparentCircleRadius(32f);
+        statisticsBinding.pcContainer.setHoleRadius(30f);
+        statisticsBinding.pcContainer.setDescription("");
+        statisticsBinding.pcContainer.setNoDataText("");
+        statisticsBinding.pcContainer.setUsePercentValues(true);
         initChart();
         return view;
     }
@@ -67,7 +73,6 @@ public class StatisticsFragment extends Fragment {
         ArrayList<Account> accounts = dbManager.selectByDate(dateBundle);
         ArrayList<String> spendingList = dbManager.selectByDateToSpendingList(dateBundle);
 
-        statisticsBinding.pcContainer.setUsePercentValues(true);
         Map<String,Long> dataMap = new HashMap<>();
         for(String spending : spendingList) {
             long value;
@@ -82,6 +87,7 @@ public class StatisticsFragment extends Fragment {
         }
 
         Iterator<String> keys = dataMap.keySet().iterator();
+        statisticsBinding.ivNodata.setVisibility(View.GONE);
         if(keys.hasNext()) {
             int index = 0;
             while( keys.hasNext() ){
@@ -97,15 +103,13 @@ public class StatisticsFragment extends Fragment {
             pieDataSet.setColors(ColorTemplate.VORDIPLOM_COLORS);
             data.setValueTextSize(11);
             data.setValueTextColor(Color.DKGRAY);
-            statisticsBinding.pcContainer.setDrawHoleEnabled(true);
-            statisticsBinding.pcContainer.setTransparentCircleRadius(32f);
-            statisticsBinding.pcContainer.setHoleRadius(30f);
-            statisticsBinding.pcContainer.setData(data);
-            statisticsBinding.pcContainer.setDescription("");
 
+            statisticsBinding.pcContainer.setData(data);
             long totalSpending = dbManager.selectByDateToTotalSpending(dateBundle);
             statisticsBinding.pcContainer.setCenterText("총금액" + "\n" + CommaFormatter.comma(totalSpending) + "원" );
             statisticsBinding.pcContainer.invalidate();
+        }else {
+            statisticsBinding.ivNodata.setVisibility(View.VISIBLE);
         }
     }
 

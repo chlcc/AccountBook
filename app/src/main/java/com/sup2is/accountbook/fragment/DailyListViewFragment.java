@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.sup2is.accountbook.R;
 import com.sup2is.accountbook.adapter.DailyRecycleViewAdapter;
@@ -39,6 +40,7 @@ public class DailyListViewFragment extends Fragment implements View.OnClickListe
     private ArrayList<Account> accounts ;
     private boolean isVisible = false;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -46,7 +48,6 @@ public class DailyListViewFragment extends Fragment implements View.OnClickListe
 
         View view = inflater.inflate(R.layout.fragment_daily_listview,container,false);
         dailyListviewBinding = DataBindingUtil.bind(view);
-
         DateBundle temp = new DateBundle(
                 String.valueOf(globalDate.getYear()),
                 String.valueOf(globalDate.getMonth()),
@@ -87,6 +88,8 @@ public class DailyListViewFragment extends Fragment implements View.OnClickListe
         }
     }
 
+    private View noDataView;
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -99,11 +102,17 @@ public class DailyListViewFragment extends Fragment implements View.OnClickListe
                         null,
                         null,null,null,null);
                 accounts = dbManager.selectByDate(temp);
-                dailyRecycleViewAdapter.updateList(accounts);
+                if(accounts.size() == 0 || accounts == null) {
+                    dailyListviewBinding.rvDailyList.removeAllViews();
+                    dailyListviewBinding.ivNodata.setVisibility(View.VISIBLE);
+                    dailyRecycleViewAdapter.clearList();
+                }else {
+                    dailyListviewBinding.ivNodata.setVisibility(View.GONE);
+                    dailyRecycleViewAdapter.updateList(accounts);
+                }
             }else {
                 isVisible = false;
             }
         }
     }
-
 }

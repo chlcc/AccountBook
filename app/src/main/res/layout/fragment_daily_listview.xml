@@ -3,23 +3,24 @@
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#fff">
+        android:background="#fff"
+        android:id="@+id/fl_wrapper"
+        >
 
-      <!--  <ListView
-            android:id="@+id/lv_daily_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@drawable/drop_shadow"
-            android:dividerHeight="0dp"/>
--->
-        
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_daily_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </android.support.v7.widget.RecyclerView>
-        
-        
+
+        <include
+            android:id="@+id/iv_nodata"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            layout="@layout/layout_no_data_view"
+            android:visibility="gone"
+            />
+
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_input"
             android:layout_width="wrap_content"
