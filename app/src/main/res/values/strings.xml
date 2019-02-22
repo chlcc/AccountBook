@@ -41,6 +41,24 @@
     </string-array>
 
 
+
+
+    <string-array name="settings_title_array">
+        <item>SMS 설정하기</item>
+        <item>이 달의 목표 설정하기</item>
+        <item>분류 수정하기</item>
+        <item>환경 설정</item>
+    </string-array>
+
+    <!--drawable name-->
+    <string-array name="settings_icon_array">
+        <item>sms</item>
+        <item>goal</item>
+        <item>list</item>
+        <item>setting2</item>
+    </string-array>
+
+
 </resources>
 
 

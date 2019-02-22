@@ -47,5 +47,6 @@
     <dimen name="custom_listview_tv_default_margin_left">5dp</dimen>
     <dimen name="custom_listview_tv_default_margin_right">5dp</dimen>
     <dimen name="custom_listview_text_wrapper_layout_width">35dp</dimen>
+    <dimen name="custom_setting_layout_height">50dp</dimen>
 
 </resources>

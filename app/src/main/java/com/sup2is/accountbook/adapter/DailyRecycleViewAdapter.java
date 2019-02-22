@@ -18,7 +18,7 @@ import com.sup2is.accountbook.util.CommaFormatter;
 
 import java.util.ArrayList;
 
-public class DailyRecycleViewAdapter extends RecyclerView.Adapter<DailyRecycleViewAdapter.BaseViewHolder> {
+public class DailyRecycleViewAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
 
     private final String TAG =   "###" + DailyRecycleViewAdapter.class.getSimpleName() + " : ";
@@ -138,13 +138,7 @@ public class DailyRecycleViewAdapter extends RecyclerView.Adapter<DailyRecycleVi
         this.notifyDataSetChanged();
     }
 
-    abstract class  BaseViewHolder extends RecyclerView.ViewHolder {
-        public BaseViewHolder(@NonNull View itemView) {
-            super(itemView);
-        }
-    }
-
-    class HeaderViewHolder extends  BaseViewHolder {
+    private class HeaderViewHolder extends  BaseViewHolder {
 
         private TextView tv_id;
         private TextView tv_day;
@@ -176,7 +170,7 @@ public class DailyRecycleViewAdapter extends RecyclerView.Adapter<DailyRecycleVi
         }
     }
 
-    class BodyViewHolder extends  BaseViewHolder {
+    private class BodyViewHolder extends  BaseViewHolder {
 
         private TextView tv_id;
         private TextView tv_time;

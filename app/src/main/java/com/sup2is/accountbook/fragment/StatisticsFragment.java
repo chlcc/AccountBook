@@ -61,10 +61,9 @@ public class StatisticsFragment extends Fragment {
     private void initChart() {
         ArrayList<Entry> dataSet = new ArrayList<>();
         ArrayList<String> xVals = new ArrayList<>();
+        statisticsBinding.ivNodata.setVisibility(View.GONE);
 
         if(statisticsBinding.pcContainer.getData() != null) {
-            PieData data = new PieData(xVals, new PieDataSet(dataSet,""));
-            statisticsBinding.pcContainer.setData(data);
             statisticsBinding.pcContainer.clear();
             statisticsBinding.pcContainer.invalidate();
         }
@@ -74,8 +73,8 @@ public class StatisticsFragment extends Fragment {
         ArrayList<String> spendingList = dbManager.selectByDateToSpendingList(dateBundle);
 
         Map<String,Long> dataMap = new HashMap<>();
+        long value;
         for(String spending : spendingList) {
-            long value;
             dataMap.put(spending, 0L);
             for(Account account : accounts){
                 if(account.getSpending().equals(spending)){
@@ -87,7 +86,6 @@ public class StatisticsFragment extends Fragment {
         }
 
         Iterator<String> keys = dataMap.keySet().iterator();
-        statisticsBinding.ivNodata.setVisibility(View.GONE);
         if(keys.hasNext()) {
             int index = 0;
             while( keys.hasNext() ){
