@@ -57,7 +57,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         public SettingsViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.iv_icon = itemView.findViewById(R.id.iv_icon);
+//            this.iv_icon = itemView.findViewById(R.id.iv_icon);
             this.tv_title = itemView.findViewById(R.id.tv_title);
         }
     }
