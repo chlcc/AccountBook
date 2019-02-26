@@ -1,6 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppBaseTheme" parent="Theme.AppCompat.NoActionBar"></style><!-- Application theme. -->
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorControlHighlight">@color/actionBar</item>
+    </style><!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <item name="windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
