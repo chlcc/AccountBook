@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppBaseTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorControlHighlight">@color/actionBar</item>
     </style><!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
@@ -48,6 +48,11 @@
 
     <style name="CustomTimePicker" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/actionBar</item>
+    </style>
+
+    <style name="CustomSwitchCompat" >
+        <item name="thumbTint">@color/switch_color</item>
+        <item name="trackTint">@color/switch_color</item>
     </style>
 
 </resources>

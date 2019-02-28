@@ -28,6 +28,7 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
+<!--
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -50,6 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5px"
                 android:background="@color/darkGray" />
+-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -65,11 +67,13 @@
                     android:text="SMS 알림 기능 사용하기"
                     android:textColor="@color/black" />
 
-                <Switch
+
+                <android.support.v7.widget.SwitchCompat
                     android:id="@+id/s_sms_on_off"
+                    style="@style/CustomSwitchCompat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="15dp" />
+                    android:layout_marginRight="10dp"  />
 
             </LinearLayout>
 
@@ -79,14 +83,16 @@
                 android:layout_height="0.5px"
                 android:background="@color/darkGray" />
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/custom_setting_layout_height"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:clickable="false"
+                >
 
                 <TextView
+                    android:id="@+id/tv_add_phone_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
@@ -95,6 +101,7 @@
                     android:textColor="@color/black" />
 
                 <ImageView
+                    android:id="@+id/ib_add_phone_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="15dp"
@@ -102,17 +109,26 @@
 
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5px"
+                android:background="@color/darkGray" />
+
 
             <LinearLayout
-                android:id="@+id/ll_sms_numbera"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
-
+                android:orientation="vertical">
+                <ListView
+                    android:id="@+id/lv_sms_phone_number_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:dividerHeight="0.5px"
+                    android:divider="@drawable/drop_shadow"
+                    >
+                </ListView>
             </LinearLayout>
-
-
         </LinearLayout>
 
 

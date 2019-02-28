@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
 
 import com.sup2is.accountbook.R;
 import com.sup2is.accountbook.activity.MainActivity;
@@ -76,12 +77,22 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
                 break;
 
             case R.id.btn_ok :
-                String name = customDialogBinding.etInput.getText().toString();
-                Category category = new Category(dbManager.getNextAutoIncrement(DBHelper.TBL_CATEGORY),dbManager.getNextCategorySeq(type),type,name);
-                dbManager.insertCategory(category);
-                FragmentManager fm = ((MainActivity)context).getSupportFragmentManager();
-                InputFormDialogFragment inputForm = (InputFormDialogFragment) fm.findFragmentByTag("input");
-                inputForm.refreshSpinnerAdapter(type,name);
+                String value = customDialogBinding.etInput.getText().toString();
+
+
+                //InputForm에서 분류관련 spinner 업데이트
+                if(type == DBHelper.METHOD_TYPE || type == DBHelper.GROUP_TYPE || type == DBHelper.SPENDING_TYPE|| type == DBHelper.INCOMING_TYPE) {
+                    Category category = new Category(dbManager.getNextAutoIncrement(DBHelper.TBL_CATEGORY),dbManager.getNextCategorySeq(type),type,value);
+                    dbManager.insertCategory(category);
+                    FragmentManager fm = ((MainActivity)context).getSupportFragmentManager();
+                    InputFormDialogFragment inputForm = (InputFormDialogFragment) fm.findFragmentByTag("input");
+                    inputForm.refreshSpinnerAdapter(type,value);
+                }
+
+                if(type == DBHelper.ADD_PHONE_NUMBER) {
+                    Toast.makeText(getContext(), "폰번호 db에 저장" + value, Toast.LENGTH_SHORT).show();
+                }
+
                 dismiss();
                 break;
         }
@@ -107,8 +118,9 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
             return this;
         }
 
-        public void setMaxLength(int maxLength) {
+        public Builder setMaxLength(int maxLength) {
             this.maxLength = maxLength;
+            return this;
         }
     }
 }

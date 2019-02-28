@@ -7,6 +7,7 @@ import android.util.Log;
 public class SharedPreferenceManager {
 
     public static final String USE_FIRST = "USE_FIRST";
+    public static final String USE_SMS_ON_OFF = "USE_SMS_ON_OFF";
 
     private static SharedPreferenceManager instance;
 
@@ -61,12 +62,21 @@ public class SharedPreferenceManager {
         editor.commit();
     }
 
-    public String getString (String key) {
+    public String getString (String key, String defaultValue) {
         if (pref == null) {
             throw new NullPointerException("SharedPreferences is null.");
         }
         Log.d(TAG, "SharedPreferences getString key : " + key);
-        return pref.getString(key, null);
+        return pref.getString(key, defaultValue);
+    }
+
+
+    public boolean getBoolean (String key, boolean defaultValue) {
+        if (pref == null) {
+            throw new NullPointerException("SharedPreferences is null.");
+        }
+        Log.d(TAG, "SharedPreferences getString key : " + key);
+        return pref.getBoolean(key, defaultValue);
     }
 
 }

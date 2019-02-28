@@ -20,6 +20,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final int GROUP_TYPE = 2;
     public static final int SPENDING_TYPE = 3;
     public static final int INCOMING_TYPE = 4;
+    public static final int ADD_PHONE_NUMBER = 5;
+    public static final int ADD_PHONE_NUMBER_NAME = 6;
 
     public DBHelper(@Nullable Context context, @Nullable String dbname, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, dbname, factory, version);

@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         viewInit();
 
-        if (pref.getString(SharedPreferenceManager.USE_FIRST) == null) {
+        if (pref.getString(SharedPreferenceManager.USE_FIRST,null) == null) {
             //todo 첫 사용자 사용법 알림
             Toast.makeText(application, "첫사용자입니다", Toast.LENGTH_SHORT).show();
 
