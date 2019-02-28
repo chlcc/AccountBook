@@ -9,4 +9,6 @@ public class CommaFormatter {
     public static String comma(long money) {
         return formatter.format(money);
     }
+
+    public static String unComma(String money) {return money.replace("," ,"");}
 }

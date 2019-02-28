@@ -8,6 +8,7 @@ public class SharedPreferenceManager {
 
     public static final String USE_FIRST = "USE_FIRST";
     public static final String USE_SMS_ON_OFF = "USE_SMS_ON_OFF";
+    public static final String MONTH_GOAL = "MONTH_GOAL";
 
     private static SharedPreferenceManager instance;
 
@@ -79,4 +80,8 @@ public class SharedPreferenceManager {
         return pref.getBoolean(key, defaultValue);
     }
 
+    public void remove(String key) {
+        editor.remove(key);
+        editor.commit();
+    }
 }

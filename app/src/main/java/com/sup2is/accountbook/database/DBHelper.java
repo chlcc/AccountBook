@@ -21,7 +21,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final int SPENDING_TYPE = 3;
     public static final int INCOMING_TYPE = 4;
     public static final int ADD_PHONE_NUMBER = 5;
-    public static final int ADD_PHONE_NUMBER_NAME = 6;
+    public static final int MONTH_GOAL = 6;
 
     public DBHelper(@Nullable Context context, @Nullable String dbname, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, dbname, factory, version);
@@ -55,6 +55,14 @@ public class DBHelper extends SQLiteOpenHelper {
         * type : 3  == spending  (ex: 식비, 교통비 ...)
         * type : 4  == incoming (ex : 월급, 용돈 ...)
         * */
+        createSql = "CREATE TABLE IF NOT EXISTS " + TBL_CATEGORY + " ("
+                + "idx INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "seq INTEGER, "
+                + "type INTEGER, "
+                + "name TEXT "
+                + ")";
+        db.execSQL(createSql);
+
         createSql = "CREATE TABLE IF NOT EXISTS " + TBL_CATEGORY + " ("
                 + "idx INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + "seq INTEGER, "

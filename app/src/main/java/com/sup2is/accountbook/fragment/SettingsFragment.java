@@ -17,9 +17,12 @@ import android.widget.Toast;
 import com.sup2is.accountbook.R;
 import com.sup2is.accountbook.activity.MainActivity;
 import com.sup2is.accountbook.adapter.SettingsAdapter;
+import com.sup2is.accountbook.database.DBHelper;
 import com.sup2is.accountbook.databinding.FragmentSettingsBinding;
+import com.sup2is.accountbook.dialog.CustomDialog;
 import com.sup2is.accountbook.listener.RecyclerItemClickListener;
 import com.sup2is.accountbook.model.Setting;
+import com.sup2is.accountbook.util.GlobalDate;
 
 import java.util.ArrayList;
 
@@ -28,6 +31,8 @@ public class SettingsFragment extends Fragment {
     private static final String TAG = SettingsFragment.class.getSimpleName();
 
     private FragmentSettingsBinding settingsBinding;
+
+    private final GlobalDate globalDate = GlobalDate.getInstance();
 
     @Nullable
     @Override
@@ -61,6 +66,14 @@ public class SettingsFragment extends Fragment {
                         smsSettingDialogFragment.show(fm,"sms");
                         break;
                     case 1 :
+                        CustomDialog.Builder builder = new CustomDialog.Builder();
+                        builder.setHint("이달의 목표 금액을 입력하세요!")
+                                .setMaxLength(50)
+                                .setType(DBHelper.MONTH_GOAL)
+                                .setCommaTextWatcher(true)
+                                .setTitle( globalDate.getYear() +"." + globalDate.getMonth()+" 월달의 목표 금액 설정");
+                        CustomDialog customDialog = new CustomDialog(getContext(),builder);
+                        customDialog.show();
                         break;
                     case 2 :
                         break;
@@ -68,11 +81,9 @@ public class SettingsFragment extends Fragment {
                         break;
 
                 }
-
-
-
             }
         }));
+
         settingsBinding.rvSettingList.setLayoutManager(new LinearLayoutManager(getContext()));
         settingsBinding.rvSettingList.setAdapter(settingsAdapter);
         return view;

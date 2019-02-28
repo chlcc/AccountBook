@@ -1,12 +1,17 @@
 package com.sup2is.accountbook.activity;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -15,9 +20,11 @@ import android.widget.Toast;
 import com.sup2is.accountbook.R;
 import com.sup2is.accountbook.adapter.TabPagerAdapter;
 import com.sup2is.accountbook.application.AccountBookApplication;
+import com.sup2is.accountbook.database.DBHelper;
 import com.sup2is.accountbook.database.DBManager;
 import com.sup2is.accountbook.databinding.ActivityMainBinding;
 import com.sup2is.accountbook.databinding.LayoutActionbarBinding;
+import com.sup2is.accountbook.dialog.CustomDialog;
 import com.sup2is.accountbook.handler.ActionbarHandler;
 import com.sup2is.accountbook.model.Account;
 import com.sup2is.accountbook.model.DateBundle;
@@ -33,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private AccountBookApplication application;
-    private SharedPreferenceManager pref;
+    private SharedPreferenceManager spm;
     private ActivityMainBinding binding;
     private LayoutActionbarBinding actionbarBinding;
     private TabPagerAdapter tabPagerAdapter;
@@ -47,18 +54,30 @@ public class MainActivity extends AppCompatActivity {
 
         application = (AccountBookApplication) getApplication();
         dbManager = application.getDbManager();
-        pref = application.getSpm();
+
+        spm = application.getSpm();
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         viewInit();
 
-        if (pref.getString(SharedPreferenceManager.USE_FIRST,null) == null) {
+        if (spm.getString(SharedPreferenceManager.USE_FIRST,null) == null) {
             //todo 첫 사용자 사용법 알림
             Toast.makeText(application, "첫사용자입니다", Toast.LENGTH_SHORT).show();
 
             // todo 사용자 알림서 전부 확인 시 다음부터 출력 X
-            pref.putString(SharedPreferenceManager.USE_FIRST, "true");
+            spm.putString(SharedPreferenceManager.USE_FIRST, "true");
         }
 
+        if(spm.getString(SharedPreferenceManager.MONTH_GOAL + globalDate.getYear() + globalDate.getMonth(),null) == null) {
+            CustomDialog.Builder builder = new CustomDialog.Builder();
+            builder.setHint("이달의 목표 금액을 입력하세요!")
+                    .setMaxLength(50)
+                    .setType(DBHelper.MONTH_GOAL)
+                    .setCommaTextWatcher(true)
+                    .setTitle( globalDate.getYear() +"." + globalDate.getMonth()+" 월달의 목표 금액 설정");
+
+            CustomDialog customDialog = new CustomDialog(this,builder);
+            customDialog.show();
+        }
     }
 
     @Override
@@ -144,6 +163,12 @@ public class MainActivity extends AppCompatActivity {
         actionbarBinding.tvGoalMoney.setText("");
         actionbarBinding.tvIncomingMoney.setText(CommaFormatter.comma(incoming) + "원");
         actionbarBinding.tvSpendingMoney.setText(CommaFormatter.comma(spending) + "원");
+
+        if(spm.getString(SharedPreferenceManager.MONTH_GOAL + globalDate.getYear() + globalDate.getMonth() , null) != null) {
+            actionbarBinding.tvGoalMoney.setText(CommaFormatter.comma(Long.parseLong(spm.getString(SharedPreferenceManager.MONTH_GOAL + globalDate.getYear() + globalDate.getMonth(),null)))+"원");
+        }else {
+            actionbarBinding.tvGoalMoney.setText("0원");
+        }
 
         actionbarBinding.tvCalendar.setText(globalDate.getYearMonthToString());
     }
