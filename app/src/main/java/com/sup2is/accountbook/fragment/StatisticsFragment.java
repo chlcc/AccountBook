@@ -54,6 +54,7 @@ public class StatisticsFragment extends Fragment {
         statisticsBinding.pcContainer.setDescription("");
         statisticsBinding.pcContainer.setNoDataText("");
         statisticsBinding.pcContainer.setUsePercentValues(true);
+//        statisticsBinding.pcContainer.setRotationEnabled(false);
         initChart();
         return view;
     }
@@ -107,6 +108,7 @@ public class StatisticsFragment extends Fragment {
             statisticsBinding.pcContainer.setCenterText("총금액" + "\n" + CommaFormatter.comma(totalSpending) + "원" );
             statisticsBinding.pcContainer.invalidate();
         }else {
+            statisticsBinding.pcContainer.setRotationEnabled(false);
             statisticsBinding.ivNodata.setVisibility(View.VISIBLE);
         }
     }
