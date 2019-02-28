@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -72,6 +73,7 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
         customDialogBinding.etInput.setHint(hint);
 
         if(isCommaTextWatcher) {
+            customDialogBinding.etInput.setInputType(InputType.TYPE_CLASS_NUMBER);
             customDialogBinding.etInput.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
