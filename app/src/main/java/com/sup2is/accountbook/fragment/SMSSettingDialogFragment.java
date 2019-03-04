@@ -34,6 +34,8 @@ public class SMSSettingDialogFragment extends DialogFragment implements View.OnC
 
     private SharedPreferenceManager spm;
     private DBManager dbManager;
+
+    private ArrayAdapter<String> phoneNumberAdapter;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -50,9 +52,7 @@ public class SMSSettingDialogFragment extends DialogFragment implements View.OnC
         dbManager = application.getDbManager();
 
         //db에서 폰넘버 불러오기
-        ArrayList<String> phoneNumberList = new ArrayList<>();
-        phoneNumberList.add("02-6241-1145");
-        phoneNumberList.add("070-6241-1145");
+        ArrayList<String> phoneNumberList = dbManager.selectSmsPhoneNumberList();
         boolean smsOnOff = spm.getBoolean(SharedPreferenceManager.USE_SMS_ON_OFF , false);
 
         int resourceId ;
@@ -62,7 +62,7 @@ public class SMSSettingDialogFragment extends DialogFragment implements View.OnC
             resourceId = R.layout.layout_custom_list_text_item_disable;
         }
 
-        ArrayAdapter<String> phoneNumberAdapter = new ArrayAdapter<>(getContext(),resourceId,phoneNumberList);
+        phoneNumberAdapter = new ArrayAdapter<>(getContext(),resourceId,phoneNumberList);
         settingSmsBinding.lvSmsPhoneNumberList.setAdapter(phoneNumberAdapter);
 
         setPhoneNumberListStyle(smsOnOff);
@@ -117,5 +117,9 @@ public class SMSSettingDialogFragment extends DialogFragment implements View.OnC
         }
     }
 
+    public void refreshPhoneNumberList(String value) {
+        phoneNumberAdapter.add(value);
+        phoneNumberAdapter.notifyDataSetChanged();
+    }
 }
 

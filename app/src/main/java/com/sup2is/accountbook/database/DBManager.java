@@ -295,4 +295,24 @@ public class DBManager {
         }
         return list;
     }
+
+    public void insertSmsPhoneNumber(String phoneNumber) {
+        String sql = "INSERT INTO " + DBHelper.TBL_SMS_PHONE_NUMBER + " VALUES ("
+                + "'" + phoneNumber +"')";
+        db.execSQL(sql);
+    }
+
+
+
+    public ArrayList<String> selectSmsPhoneNumberList() {
+        String sql = "SELECT * FROM " + DBHelper.TBL_SMS_PHONE_NUMBER;
+        Cursor results = db.rawQuery(sql,null);
+        ArrayList<String> list = new ArrayList<>();
+        results.moveToFirst();
+        while (!results.isAfterLast()) {
+            list.add(results.getString(results.getColumnIndex("phone_number")));
+            results.moveToNext();
+        }
+        return list;
+    }
 }

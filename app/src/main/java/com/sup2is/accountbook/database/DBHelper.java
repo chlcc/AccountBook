@@ -15,6 +15,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String DB_NAME = "account_book.db";
     public static final String TBL_ACCOUNT = "account_book";
     public static final String TBL_CATEGORY = "account_book_category";
+    public static final String TBL_SMS_PHONE_NUMBER = "account_book_sms_phone_number";
 
     public static final int METHOD_TYPE = 1;
     public static final int GROUP_TYPE = 2;
@@ -62,15 +63,12 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "name TEXT "
                 + ")";
         db.execSQL(createSql);
+        initCategory(db);
 
-        createSql = "CREATE TABLE IF NOT EXISTS " + TBL_CATEGORY + " ("
-                + "idx INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "seq INTEGER, "
-                + "type INTEGER, "
-                + "name TEXT "
+        createSql = "CREATE TABLE IF NOT EXISTS " + TBL_SMS_PHONE_NUMBER + " ("
+                + "phone_number TEXT"
                 + ")";
         db.execSQL(createSql);
-        initCategory(db);
     }
 
     @Override

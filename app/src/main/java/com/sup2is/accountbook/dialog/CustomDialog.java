@@ -22,6 +22,7 @@ import com.sup2is.accountbook.database.DBHelper;
 import com.sup2is.accountbook.database.DBManager;
 import com.sup2is.accountbook.databinding.LayoutCustomDialogBinding;
 import com.sup2is.accountbook.fragment.InputFormDialogFragment;
+import com.sup2is.accountbook.fragment.SMSSettingDialogFragment;
 import com.sup2is.accountbook.model.Category;
 import com.sup2is.accountbook.util.CommaFormatter;
 import com.sup2is.accountbook.util.GlobalDate;
@@ -127,7 +128,11 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
                 }
 
                 if(type == DBHelper.ADD_PHONE_NUMBER) {
-                    Toast.makeText(getContext(), "폰번호 db에 저장" + value, Toast.LENGTH_SHORT).show();
+                    dbManager.insertSmsPhoneNumber(value.trim());
+                    FragmentManager fm = ((MainActivity)context).getSupportFragmentManager();
+                    SMSSettingDialogFragment smsSetting = (SMSSettingDialogFragment) fm.findFragmentByTag("sms");
+                    smsSetting.refreshPhoneNumberList(value);
+                    Toast.makeText(getContext(),"저장되었습니다.",Toast.LENGTH_SHORT).show();
                 }
 
                 if(type == DBHelper.MONTH_GOAL) {

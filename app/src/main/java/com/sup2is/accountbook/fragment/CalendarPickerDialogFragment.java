@@ -1,5 +1,6 @@
 package com.sup2is.accountbook.fragment;
 
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -57,15 +58,18 @@ public class CalendarPickerDialogFragment extends DialogFragment {
         return view;
     }
 
-    private class CalendarPickerListener implements View.OnClickListener{
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        int selectedMonth = calendarPickerBinding.npMonth.getValue() - 1;
+        int selectedYear = calendarPickerBinding.npYear.getValue();
+        globalDate.setDate(selectedYear,selectedMonth,1);
+        ((MainActivity)(getActivity())).refreshFragment();
+        ((MainActivity)(getActivity())).refreshActionBar();
+    }
 
+    private class CalendarPickerListener implements View.OnClickListener{
         @Override
         public void onClick(View v) {
-            int selectedMonth = calendarPickerBinding.npMonth.getValue() - 1;
-            int selectedYear = calendarPickerBinding.npYear.getValue();
-            globalDate.setDate(selectedYear,selectedMonth,1);
-            ((MainActivity)(getActivity())).refreshFragment();
-            ((MainActivity)(getActivity())).refreshActionBar();
             getDialog().dismiss();
         }
     }
